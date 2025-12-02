@@ -5,7 +5,7 @@
 
 ## Structure du dépot GitHub:
 
-ProjetWildWater/
+```text ProjetWildWater/
 ├── data/              # Pour stocker le fichier CSV source
 ├── codeC/             # Dossier contenant tout le code C
 │   ├── main.c         # Point d'entrée du C
@@ -17,3 +17,4 @@ ProjetWildWater/
 ├── Makefile           # Fichier de compilation (à la racine)
 ├── myScript.sh        # Le script Shell (point d'entrée principal)
 └── ReadMe.md          # Instructions de compilation/utilisation
+``` 
