@@ -1,7 +1,9 @@
 # WildWater
+**Auteurs :** Alexandre Godineau, Siméon Dorninger, Timothée Renouf
+**Promotion :** Pré-Ing2 2025-2026
 ## Projet d'info 3
 
-### Structure du dépot GitHub:
+## Structure du dépot GitHub:
 
 ProjetWildWater/
 ├── data/              # Pour stocker le fichier CSV source
