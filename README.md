@@ -1,7 +1,7 @@
-### WildWater
-##Projet d'info 3
+# WildWater
+## Projet d'info 3
 
-#Structure du dépot gitub:
+### Structure du dépot GitHub:
 
 ProjetWildWater/
 ├── data/              # Pour stocker le fichier CSV source
