@@ -10,21 +10,13 @@ return nv;
 }
 
 int max(int a, int b){ //retourne le max entre a et b deux entiers
-	if(a > b){
-		return a;
-	}
-	else{
-		return b;
-	}
+	if(a > b) return a;
+	else return b;
 }
 
 int min(int a, int b){ //même chose pour le minimum entre deux entiers
-	if(a =< b){
-		return a;
-	}
-	else{
-		return b;
-	}
+	if(a =< b) return a;
+	else return b;
 }
 
 
