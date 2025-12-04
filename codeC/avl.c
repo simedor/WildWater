@@ -7,29 +7,42 @@ pArbre creerArbre(){
 	nv->eq=0;
 return nv;
 }
-parbre rotationgauche(parbre a){
-	int eq_a=0
-	int eq_p=0;
-	parbre pivot=a->fd;
-	a->fd=pivot->fg;
-	eq_a=a->eq;
-	eq_p=pivot->eq;
-	a->eq=eq_a-min(eq_p,0)-1;
-	pivot->eq=min(eq_a-2, eq_a+eq_p-2,eq_p-1);
-	a=pivot;
-	return a;
+pAVL rotationgauche(pAVL a){
+    int eq_a = 0;
+    int eq_p = 0;
+    pAVL pivot = a->fd;
+    a->fd = pivot->fg;
+    pivot->fg = a;
+    eq_a = a->eq;
+    eq_p = pivot->eq;
+    a->eq = eq_a - max(eq_p, 0) - 1;
+    pivot->eq = min(eq_a - 2, min(eq_a + eq_p - 2, eq_p - 1));
+    a = pivot;
+    return a;
 }
-parbre rotationdroite(parbre a){
-	int eq_a=0
-	int eq_p=0;
-	parbre pivot=a->fg;
-	a->fg=pivot->fd;
-	eq_a=a->eq;
-	eq_p=pivot->eq;
-	a->eq=eq_a-min(eq_p,0)+1;
-	pivot->eq=max(eq_a+2, eq_a+eq_p+2,eq_p+1);
-	a=pivot;
-	return a;
+
+pAVL rotationdroite(pAVL a){
+    int eq_a = 0;
+    int eq_p = 0;
+    pAVL pivot = a->fg;
+    a->fg = pivot->fd;
+    pivot->fd = a;
+    eq_a = a->eq;
+    eq_p = pivot->eq;
+    a->eq = eq_a - min(eq_p, 0) + 1;
+    pivot->eq = max(eq_a + 2, max(eq_a + eq_p + 2, eq_p + 1));
+    a = pivot;
+    return a;
+}
+
+pAVL doublerotationgauche(pAVL a){
+    a->fd = rotationdroite(a->fd);
+    return rotationgauche(a);
+}
+
+pAVL doublerotationdroite(pAVL a){
+    a->fg = rotationgauche(a->fg);
+    return rotationdroite(a);
 }
 Arbre* equilibrerAVL(Arbre* a) {
 	if (a != NULL) {
