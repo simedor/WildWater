@@ -1,7 +1,7 @@
 # include "header.h"
 
 void afficher_noeud(Usine* u, FILE* f) {
-    fprintf(f, "%s;%ld\n", u->id, u->capacite);
+    fprintf(f, "%s;%ld\n", u->id, u->vol_source);
 }
 
 void parcours_infixe_inverse(Arbre* a, FILE* f) {
