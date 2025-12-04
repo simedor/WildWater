@@ -1,12 +1,30 @@
 #include "avl.h"
 pArbre creerArbre(){
 	pAVL nv=malloc(sizeof(AVL));
-  nv->u=NULL;
-  nv->capte=nv->conso=nv->capacitemax=0;
+  	nv->u=NULL;
+  	nv->capte=nv->conso=nv->capacitemax=0;
 	nv->fg=nv->fd=NULL;
 	nv->eq=0;
 return nv;
 }
+int max(int a, int b){
+	if(a > b){
+		return a;
+	}
+	else{
+		return b;
+	}
+}
+int min(int a, int b){
+	if(a =< b){
+		return a;
+	}
+	else{
+		return b;
+	}
+}
+
+
 pAVL rotationgauche(pAVL a){
     int eq_a = 0;
     int eq_p = 0;
