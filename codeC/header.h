@@ -14,11 +14,11 @@ typedef struct avl {
   int eq;
 }AVL, *pAVL;
 
-Arbre* creerArbre(char* id, float ct, float capamax, float cs);
+pAVL creerArbre(char* id, float ct, float capamax, float cs);
 
-Arbre* insertionAVL(pAVL a, char* id, float volume, int* h);
+pAVL insertionAVL(pAVL a, char* id, float volume, int* h);
 
-Arbre* equilibreAVL(pAVL a);
+pAVL equilibreAVL(pAVL a);
 
 void libererArbre(pAVL a);
 
