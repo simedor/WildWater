@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef struct usine {
   char* ID;
   float capte;
   float capacitemax;
   float conso;
 }Usine;
-typedef struct avl {
+
+typedef struct AVL {
   struct *Usine u;
-  struct *avl fg;
-  struct *avl fd;
+  struct *AVL fg;
+  struct *AVL fd;
   int eq;
 }AVL, *pAVL;
 
