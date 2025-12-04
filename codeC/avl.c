@@ -31,6 +31,48 @@ parbre rotationdroite(parbre a){
 	a=pivot;
 	return a;
 }
-int equilibre(*Arbre a) {
-  if (!a) return 0;
-  return a
+Arbre* equilibrerAVL(Arbre* a) {
+	if (a != NULL) {
+		if (a->equilibre <= -2) {
+			if (a->fg->equilibre <= 0) {
+				return rotationDroite(a);
+			} else {
+				return rotationDroiteDouble(a);
+			}
+		} else if (a->equilibre >= 2) {
+			if (a->fd->equilibre >= 0) {
+				return rotationGauche(a);
+			} else {
+				return rotationGaucheDouble(a);
+			}
+		}
+	}
+	return a;
+}
+
+Arbre* insertionAVL(Arbre* a, int v, int* h) {
+	if (a == NULL) {
+		*h = 1;
+		return creerArbre(v);
+	}
+	if (v < a->value) {
+		a->fg = insertionAVL(a->fg, v, h);
+		*h = -*h;
+	} else if (v > a->value) {
+		a->fd = insertionAVL(a->fd, v, h);
+	} else {
+		*h = 0;
+		return a;
+	}
+	if (*h != 0) {
+		a->equilibre = a->equilibre + *h;
+		a = equilibrerAVL(a);
+		if (a->equilibre == 0) {
+			*h = 0;
+		} else {
+			*h = 1;
+		}
+		
+	}
+	return a;
+}
