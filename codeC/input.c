@@ -63,7 +63,7 @@ void chargerDonnees(char* cheminFichier, Arbre** racine) {
   u.capacite = capacite;
         
   // Initialisation des autres valeurs à 0 (pour plus tard)
-  u.vol_source = 0;
+  u.vol_source = 0; insertion(*racine, u);
   u.vol_traite = 0;
 
   // Insertion dans l'AVL
