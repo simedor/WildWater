@@ -1,7 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <time.h>
 #include <string.h>
-
 typedef struct usine {
   char* ID;
   float capte;
