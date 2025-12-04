@@ -18,7 +18,7 @@ void output_histo(char* nom_fichier, Arbre* racine) {
         fprintf(stderr, "Erreur : Impossible de créer le fichier %s\n", nom_fichier);
         exit(2);
     }
-    fprintf(f, "identifier;max volume (k.m3.year-1)\n");
+    fprintf(f, "identifier;source volume (k.m3.year-1)\n");
     parcours_infixe_inverse(racine, f);
     fclose(f);
 }
