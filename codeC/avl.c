@@ -8,8 +8,8 @@ pArbre creerArbre(Usine u) {
 	if (nouveau->u) exit(1);
   	strncpy(nouveau->u->ID, u.ID, 49);
 	nouveau->u->ID[49] = '\0';
-  	nouveau->u->capte = u->capte;
-	nouveau->u->conso = nouveau->u->capacitemax = 0;
+  	nouveau->u->volumeSource = u->volumeSource;
+	nouveau->u->volumeTraite = nouveau->u->capacite = 0;
 	nouveau->fg = nouveau->fd = NULL;
 	nouveau->equilibre = 0;
 	return nouveau;
@@ -81,7 +81,7 @@ pAVL equilibrerAVL(pAVL a) {
 	return a;
 }
 
-pAVL insertionAVL(pAVL a, Usine u, int* h) { //insère un élément dans l'AVL INCOMPLET A MODIFIER 
+pAVL insertionAVL(pAVL a, Usine u, int* h) { 
 	if (a == NULL) {
 		*h = 1;
 		return creerArbre(u);
@@ -94,7 +94,7 @@ pAVL insertionAVL(pAVL a, Usine u, int* h) { //insère un élément dans l'AVL I
 		a->fd = insertionAVL(a->fd, u, h);
 	} else {
 		// L'usine existe déjà mais on doit additionner les volumes
-		a->u->capte = a->u->capte + u.capte;
+		a->u->volumeSource = a->u->volumeSource + u.volumeSource;
 		*h = 0;
 		return a;
 	}
