@@ -4,7 +4,7 @@
 Ecrire une ligne de données pour une usine et gère la conversion d'unités
 */
 void afficherNoeud(Usine* u, FILE* f) {
-    double volume = u->capte / 1000.0;
+    double volume = u->volumeSource / 1000.0;
     fprintf(f, "%s;%.3f\n", u->ID, volume);
 }
 
