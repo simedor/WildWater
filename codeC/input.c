@@ -1,77 +1,55 @@
 #include "header"
+#include <ctype.h>
 #define BUFFER_SIZE 4096
 
-void nettoyer_ligne(char* chaine) {
+/*
+Supprimer le caractère de saut de ligne final
+*/
+void nettoyerLigne(char* chaine) {
   char* p = strchr(chaine, '\n');
   if (p) *p = '\0';
   p = strchr(chaine, '\r');
   if (p) *p = '\0';
 }
 
-void chargerDonnees(char* cheminFichier, Arbre** racine) {
-  FILE* fichier = fopen(cheminFichier, "r");
-    
-    // Vérification ouverture fichier (Critère robustesse : code retour positif en cas d'erreur)
-  if (fichier == NULL) {
+/*
+Vérifier si une chaîne est un nombre valide
+*/
+int estNumerique(char* chaine) {
+  if (chaine == NULL || strlen(chaine) == 0) return 0;
+  if (strcmp(chaine, "-") == 0) return 0;
+  return (isdigit(chaine[0]) || chaine[0] == '-');
+}
+
+/*
+Charger les données pour faire l'histogramme des sources
+*/
+void chargerDonnees(char* cheminFichier, Arbre** a) {
+  FILE* f = fopen(cheminFichier, "r");
+  if (f == NULL) {
     fprintf(stderr, "Erreur : Impossible d'ouvrir le fichier %s\n", cheminFichier);
-    exit(2);
+    exit(1);
   }
   char ligne[BUFFER_SIZE];
-  char ligne_copie[BUFFER_SIZE]; // Copie car strtok modifie la chaîne
-  int numero_ligne = 0;
-
-    // Lecture ligne par ligne
-  while (fgets(ligne, BUFFER_SIZE, fichier) != NULL) {
-    numero_ligne++;
-    nettoyer_ligne(ligne);
+  char ligne_copie[BUFFER_SIZE];
+  while (fgets(ligne, BUFFER_SIZE, f) != NULL) {
+    nettoyerLigne(ligne);
     if (strlen(ligne) == 0) continue;
-      strcpy(ligne_copie, ligne);
+    strcpy(ligne_copie, ligne);
 
-    // -- COLONNE 1 --
     char* col1 = strtok(ligne_copie, ";");
-    if (col1 == NULL) continue; // Ligne vide ou malformée
-
-    // Si la colonne 1 n'est pas "-", ce n'est pas une définition d'usine
-    // (Cela permet d'ignorer toutes les lignes de trajets Source->Usine ou Usine->Stockage)
-    if (strcmp(col1, "-") != 0 && strlen(col1) > 0) {
-      continue; 
-    }
-
-    // -- COLONNE 2 (Identifiant) --
-    char* id_usine = strtok(NULL, ";");
-    if (id_usine == NULL || strcmp(id_usine, "-") == 0) continue;
-
-    // -- COLONNE 3 --
+    char* col2 = strtok(NULL, ";");
     char* col3 = strtok(NULL, ";");
-    // Si col3 existe et n'est pas "-", on ignore (car une usine a "-" en col 3)
-    if (col3 != NULL && strcmp(col3, "-") != 0 && strlen(col3) > 0) {
-      continue;
-    }
+    char* col4 = strtok(NULL, ";");
 
-    // -- COLONNE 4 (Capacité) --
-    char* cap_str = strtok(NULL, ";");
-    if (cap_str == NULL || strcmp(cap_str, "-") == 0) continue;
-
-    // 3. Conversion et Insertion
-    // À ce stade, on est sûr d'avoir une ligne "Usine" valide
-        
-    long capacite = atol(cap_str); // Conversion string -> long
-  Usine u;
-  // Copie sécurisée de l'ID (max 50 chars pour éviter débordement)
-  strncpy(u.id, id_usine, 49);
-  u.id[49] = '\0'; 
-  u.capacite = capacite;
-        
-  // Initialisation des autres valeurs à 0 (pour plus tard)
-  u.vol_source = 0; insertion(*racine, u);
-  u.vol_traite = 0;
-
-  // Insertion dans l'AVL
-  // Note : insertion renvoie la nouvelle racine potentielle après équilibrage
-  *racine = insertion(*racine, u);
+    if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
+    if (strcmp(col1, "-") != 0 && strlen(col1) > 0) continue;
+    if (strcmp(col3, "-") == 0) continue;
+    if (!est_numerique(col4)) continue;
+    
+    double volume = atof(col4);
+    char* ID = col3;
+    *a = insertionDonneesSource(*a, ID, volume);
   }
-
-    fclose(fichier);
-
-
-  }
+  fclose(fichier);
+}
