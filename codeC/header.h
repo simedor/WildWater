@@ -13,7 +13,7 @@ Structure représentant les données d'une usine
 - ID : Identifiant unique
 */
 typedef struct usine {
-  char* ID[50];
+  char ID[50];
   double volumeSource;
   double capacite;
   double volumeTraite;
