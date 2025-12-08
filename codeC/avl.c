@@ -5,7 +5,7 @@ pArbre creerArbre(Usine u) {
 	pAVL nouveau = malloc(sizeof(AVL));
 	if (nouveau == NULL) exit(1);
 	nouveau->u = malloc(sizeof(Usine));
-	if (nouveau->u) exit(1);
+	if (nouveau->u == NULL) exit(1);
   	strncpy(nouveau->u->ID, u.ID, 49);
 	nouveau->u->ID[49] = '\0';
   	nouveau->u->volumeSource = u->volumeSource;
@@ -101,12 +101,8 @@ pAVL insertionAVL(pAVL a, Usine u, int* h) {
 	if (*h != 0) {
 		a->equilibre = a->equilibre + *h;
 		a = equilibrerAVL(a);
-		if (a->equilibre == 0) {
-			*h = 0;
-		} else {
-			*h = 1;
-		}
-		
+		if (a->equilibre == 0) *h = 0;
+		else *h = 1;
 	}
 	return a;
 }
