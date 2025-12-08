@@ -52,7 +52,7 @@ void chargerDonnees(char* cheminFichier, Arbre** a) {
     u_temp.ID[49] = '\0';
     u_temp.volumeSource = atof(col4);
     
-    *a = insertionAVL(*a, u_temp);
+    *a = insertionAVL(*a, u_temp, &(a->equilibre));
   }
   fclose(fichier);
 }
