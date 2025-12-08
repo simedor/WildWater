@@ -17,15 +17,15 @@ typedef struct usine {
   double volumeSource;
   double capacite;
   double volumeTraite;
-} Usine;
+} Usine, *pUsine;
 
 /*
 Structure de l'arbre AVL, contenant un pointeur vers une usine
 */
 typedef struct AVL {
-  *Usine u;
-  struct *AVL fg;
-  struct *AVL fd;
+  Usine* u;
+  struct AVL* fg;
+  struct AVL* fd;
   int equilibre;
 } AVL, *pAVL;
 
