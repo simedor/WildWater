@@ -46,10 +46,10 @@ void libererArbre(pAVL a);
 
 void nettoyerLigne(char* chaine);
 int estNumerique(char* chaine);
-void chargerDonnees(char* cheminFichier, Arbre** a);
+void chargerDonnees(char* cheminFichier, pAVL* a);
 
 // Module output.c
 
-void parcoursInfixeInverse(Arbre* a, FILE* f);
+void parcoursInfixeInverse(pAVL a, FILE* f);
 void afficherNoeud(Usine* u, FILE* f);
-void outputHistoSource(char* nomFichier, Arbre* a)
+void outputHistoSource(char* nomFichier, pAVL a)
