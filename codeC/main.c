@@ -8,6 +8,7 @@ Arguments attendus (définis par le script Shell) :
 - argv[2] : Commande principale ("histo" ou "leaks")
 - argv[3] : Sous-commande ("src", "max", "real") OU ID Usine (pour leaks)
 */
+
 int main(int argc, char* argv[]) {
 
   // 1. VÉRIFICATION DES ARGUMENTS
@@ -26,13 +27,13 @@ int main(int argc, char* argv[]) {
   }
 
   // 2. INITIALISATION
-  Arbre* a = NULL;
+  pAVL a = NULL;
   char nomFichierSortie[256];
 
   // 3. TRAITEMENT
   if (strcmp(mode, "src") == 0) {
     printf("Lecture du fichier %s en cours...\n", cheminFichier);
-    chargerDonneesSources(cheminFichier, &a);
+    chargerDonnees(cheminFichier, &a);
     strcpy(nomFichierSortie, "vol_source.csv");
     outputHistoSource(nomFichierSortie, a);
     printf("Succès ! Fichier généré : %s\n", nomFichierSortie);
