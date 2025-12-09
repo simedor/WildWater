@@ -1,4 +1,4 @@
-#include <stdlib.h>
+oireAVL#include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <time.h>
@@ -44,7 +44,7 @@ pAVL rotationDroiteDouble(pAVL a);
 pAVL creerArbre(Usine u);
 pAVL insertionAVL(pAVL a, Usine u, int* h);
 pAVL equilibrerAVL(pAVL a);
-void libererArbre(pAVL a);
+void libererMemoireAVL(pAVL a);
 
 // Module input.c
 
