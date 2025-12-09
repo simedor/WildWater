@@ -24,7 +24,7 @@ int estNumerique(char* chaine) {
 /*
 Charger les données pour faire l'histogramme des sources
 */
-void chargerDonnees(char* cheminFichier, Arbre** a) {
+void chargerDonnees(char* cheminFichier, pAVL* a) {
   FILE* fichier = fopen(cheminFichier, "r");
   if (fichier == NULL) {
     fprintf(stderr, "Erreur : Impossible d'ouvrir le fichier %s\n", cheminFichier);
@@ -48,11 +48,11 @@ void chargerDonnees(char* cheminFichier, Arbre** a) {
     if (!estNumerique(col4)) continue;
 
     Usine u_temp;
-    strncpy(u_temp, col3, 49);
+    strncpy(u_temp.ID, col3, 49);
     u_temp.ID[49] = '\0';
     u_temp.volumeSource = atof(col4);
     
-    *a = insertionAVL(*a, u_temp, &(a->equilibre));
+    *a = insertionAVL(*a, u_temp, &((*a)->equilibre));
   }
   fclose(fichier);
 }

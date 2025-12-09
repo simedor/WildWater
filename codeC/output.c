@@ -11,7 +11,7 @@ void afficherNoeud(Usine* u, FILE* fichier) {
 /*
 Ecrire les identifiants dans l'ordre alphabétique inverse
 */
-void parcoursInfixeInverse(Arbre* a, FILE* fichier) {
+void parcoursInfixeInverse(pAVL a, FILE* fichier) {
   if (a != NULL) {
     parcoursInfixeInverse(a->fd, fichier);
     afficherNoeud(a->u, fichier);
@@ -22,7 +22,7 @@ void parcoursInfixeInverse(Arbre* a, FILE* fichier) {
 /* 
 Générer le fichier CSV pour faire l'histogramme
 */
-void outputHistoSource(char* nomFichier, Arbre* a) {
+void outputHistoSource(char* nomFichier, pAVL a) {
     FILE* fichier = fopen(nomFichier, "w");
     if (fichier == NULL) {
         fprintf(stderr, "Erreur : Impossible de créer le fichier %s\n", nomFichier);
