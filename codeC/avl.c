@@ -63,6 +63,7 @@ pAVL rotationDroiteDouble(pAVL a){
     a->fg = rotationGauche(a->fg);
     return rotationDroite(a);
 }
+
 pAVL equilibrerAVL(pAVL a) {
 	if (a != NULL) {
 		if (a->equilibre <= -2) {
