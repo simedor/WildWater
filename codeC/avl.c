@@ -6,7 +6,6 @@ pAVL creerArbre(Usine u) {
 	if (nouveau == NULL) exit(1);
 	nouveau->u = malloc(sizeof(Usine));
 	if (nouveau->u == NULL) exit(1);
-	
   	strncpy(nouveau->u->ID, u.ID, 49);
 	nouveau->u->ID[49] = '\0';
   	nouveau->u->volumeSource = u.volumeSource;
@@ -29,7 +28,6 @@ int min(int a, int b) {
 pAVL rotationGauche(pAVL a) {
     int eq_a = 0;
     int eq_p = 0;
-	
     pAVL pivot = a->fd;
     a->fd = pivot->fg;
     pivot->fg = a;
@@ -44,7 +42,6 @@ pAVL rotationGauche(pAVL a) {
 pAVL rotationDroite(pAVL a) {
     int eq_a = 0;
     int eq_p = 0;
-	
     pAVL pivot = a->fg;
     a->fg = pivot->fd;
     pivot->fd = a;
@@ -104,10 +101,10 @@ pAVL insertionAVL(pAVL a, Usine u, int* h) {
 	return a;
 }
 
-void libererArbre(pAVL a) {
+void libererMemoireAVL(pAVL a) {
     if (a != NULL) {
-        libererArbre(a->fg);
-        libererArbre(a->fd);
+        libererMemoireAVL(a->fg);
+        libererMemoireALV(a->fd);
 		free(a->u);
         free(a);
     }

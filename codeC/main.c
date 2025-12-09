@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
   }
   
   // 4. NETTOYAGE MÉMOIRE
-  libererArbre(a);
+  libererMemoireAVL(a);
   
   return 0;
 }
