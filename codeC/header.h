@@ -52,4 +52,4 @@ void chargerDonnees(char* cheminFichier, pAVL* a);
 
 void parcoursInfixeInverse(pAVL a, FILE* f);
 void afficherNoeud(Usine* u, FILE* f);
-void outputHistoSource(char* nomFichier, pAVL a)
+void outputHistoSource(char* nomFichier, pAVL a);
