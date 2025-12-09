@@ -9,7 +9,8 @@ pAVL creerArbre(Usine u) {
   	strncpy(nouveau->u->ID, u.ID, 49);
 	nouveau->u->ID[49] = '\0';
   	nouveau->u->volumeSource = u.volumeSource;
-	nouveau->u->volumeTraite = nouveau->u->capacite = 0;
+	nouveau->u->volumeTraite = u.volumeTraite;
+	nouveau->u->capacite = u.capacite;
 	nouveau->fg = nouveau->fd = NULL;
 	nouveau->equilibre = 0;
 	return nouveau;
@@ -89,6 +90,10 @@ pAVL insertionAVL(pAVL a, Usine u, int* h) {
 	} else {
 		// L'usine existe déjà mais on doit additionner les volumes
 		a->u->volumeSource = a->u->volumeSource + u.volumeSource;
+		a->u->volumeTraite = a->u->volumeTraite + u->volumeTraite;
+		if (u.capacite > 0) {
+        	a->u->capacite = u.capacite;
+    	}
 		*h = 0;
 		return a;
 	}
