@@ -28,7 +28,7 @@ void outputHistoSource(char* nomFichier, pAVL a) {
         fprintf(stderr, "Erreur : Impossible de créer le fichier %s\n", nomFichier);
         exit(1);
     }
-    fprintf(fichier, "identifier;source volume (k.m3.year-1)\n");
+    fprintf(fichier, "identifier;source volume (M.m3.year-1)\n");
     parcoursInfixeInverse(a, fichier);
     fclose(fichier);
 }
