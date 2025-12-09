@@ -1,5 +1,4 @@
-#ifndef header.h
-#define header.h
+#include "header.h"
 
 /*
 Ecrire une ligne de données pour une usine et gère la conversion d'unités
@@ -34,4 +33,3 @@ void outputHistoSource(char* nomFichier, pAVL a) {
     fclose(fichier);
 }
 
-#endif
