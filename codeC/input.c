@@ -31,7 +31,7 @@ void chargerDonnees(char* cheminFichier, pAVL* a) {
     exit(1);
   }
 
-  printf"Le fichier a ete ouvert sans erreur");
+  printf("Le fichier a ete ouvert sans erreur");
   
   char ligne[BUFFER_SIZE];
   char ligne_copie[BUFFER_SIZE];
@@ -57,6 +57,6 @@ void chargerDonnees(char* cheminFichier, pAVL* a) {
     
     *a = insertionAVL(*a, u_temp, &((*a)->equilibre));
   }
-  printf"Les donnees ont ete rentres dans l'AVL");
+  printf("Les donnees ont ete rentres dans l'AVL");
   fclose(fichier);
 }
