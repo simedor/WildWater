@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
   if (strcmp(mode, "src") == 0) {
     printf("Lecture du fichier %s en cours...\n", cheminFichier);
     chargerDonnees(cheminFichier, &a);
-    printf("La fonction chargerDonnes a ete executee");
+    printf("La fonction chargerDonnes a ete executee\n");
     strcpy(nomFichierSortie, "vol_source.csv");
     outputHistoSource(nomFichierSortie, a);
-    printf("Succès ! Fichier généré : %s\n", nomFichierSortie);
+    printf("Succes ! Fichier genere : %s\n", nomFichierSortie);
   }
   
   // 4. NETTOYAGE MÉMOIRE
