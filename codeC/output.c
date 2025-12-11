@@ -29,14 +29,20 @@ void parcoursInfixeInverse(pAVL a, FILE* fichier, char* mode) {
 /* 
 Générer le fichier CSV pour faire l'histogramme
 */
-void outputHistoSource(char* nomFichier, pAVL a) {
+void outputHisto(char* nomFichier, pAVL a, char* mode) {
     FILE* fichier = fopen(nomFichier, "w");
     if (fichier == NULL) {
         fprintf(stderr, "Erreur : Impossible de créer le fichier %s\n", nomFichier);
         exit(1);
     }
-    fprintf(fichier, "identifier;source volume (M.m3.year-1)\n");
-    parcoursInfixeInverse(a, fichier, "src");
+    if (strcmp(mode, "src") == 0) {
+        fprintf(fichier, "identifier;volume source(M.m3.year-1)\n");
+    } else if (strcmp(mode, "max") == 0) {
+        fprintf(fichier, "identifier;capacite(M.m3.year-1)\n");
+    } else if (strcmp(mode, "real") == 0) {
+        fprintf(fichier, "identifier;volume traite(M.m3.year-1)\n");
+    }
+    parcoursInfixeInverse(a, fichier, mode);
     fclose(fichier);
 }
 
