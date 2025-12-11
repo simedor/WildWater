@@ -31,14 +31,22 @@ int main(int argc, char* argv[]) {
   char nomFichierSortie[256];
 
   // 3. TRAITEMENT
+  printf("Lecture du fichier %s en cours...\n", cheminFichier);
+  chargerDonnees(cheminFichier, &a, mode);
+  printf("La fonction chargerDonnes a ete executee\n");
   if (strcmp(mode, "src") == 0) {
-    printf("Lecture du fichier %s en cours...\n", cheminFichier);
-    chargerDonnees(cheminFichier, &a);
-    printf("La fonction chargerDonnes a ete executee\n");
     strcpy(nomFichierSortie, "vol_source.csv");
-    outputHistoSource(nomFichierSortie, a);
-    printf("Succes ! Fichier genere : %s\n", nomFichierSortie);
+  } else if (strcmp(mode, "max") == 0) {
+    strcpy(nomFichierSortie, "vol_max.csv");
+  } else if (strcmp(mode, "real") == 0) {
+    strcpy(nomFichierSortie, "vol_real.csv");
+  } else {
+        fprintf(stderr, "Erreur : Mode '%s' inconnu pour la commande histo.\n", mode);
+        fprintf(stderr, "Modes disponibles : src, max, real\n");
+        return 3;
   }
+  outputHistoSource(nomFichierSortie, a);
+  printf("Succes ! Fichier genere : %s\n", nomFichierSortie);
   
   // 4. NETTOYAGE MÉMOIRE
   libererMemoireAVL(a);
