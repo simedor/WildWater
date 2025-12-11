@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Modes disponibles : src, max, real\n");
         return 3;
   }
-  outputHistoSource(nomFichierSortie, a, mode);
+  outputHisto(nomFichierSortie, a, mode);
   printf("Succes ! Fichier genere : %s\n", nomFichierSortie);
   
   // 4. NETTOYAGE MÉMOIRE
