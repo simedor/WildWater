@@ -1,0 +1,31 @@
+# Fichiers de compilation générés par GCC/Make
+############################################
+# Fichiers objets
+*.o
+# Fichiers dépendances
+*.d
+# Exécutable principal (produit par make)
+cwire
+cwire.exe
+# Exécutables de test (si vous en créez)
+*.exe
+*.out
+
+# Fichiers générés par le programme (CSV de sortie)
+############################################
+vol_source.csv
+vol_max.csv
+vol_real.csv
+# Ajoutez d'autres fichiers de sortie CSV si vous en créez
+
+# Fichiers de débogage et temporaires
+############################################
+# Fichiers de log/erreurs
+*.log
+*.err
+# Fichiers de dump (si le programme crash)
+*.core
+# Configuration IDE (Visual Studio Code)
+.vscode/
+# Fichiers temporaires Windows
+Thumbs.db
