@@ -51,7 +51,9 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode);
 
 // Module output.c
 
-void parcoursInfixeInverse(pAVL a, FILE* f, char* mode);
 void afficherNoeud(Usine* u, FILE* f, char* mode);
+void afficherNoeudLeaks(Usine* u, FILE* f);
+void parcoursInfixeInverse(pAVL a, FILE* f, char* mode);
+void parcoursInfixe(pAVL a, FILE* f);
 void outputHisto(char* nomFichier, pAVL a, char* mode);
 void outputLeaks(char* nomFichier, pAVL a);
