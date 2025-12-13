@@ -92,7 +92,7 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
     else {
       if (strcmp(col3, "-") == 0) {
         // C'est une ligne de CAPACITÉ
-        u_temp.capacite = atof(col4);
+        u_temp->capacite = atof(col4);
         ligneValide = 1;
       } else {
         // C'est une ligne de CONSOMMATION
@@ -101,7 +101,7 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
         if (col5 != NULL && estNumerique(col5)) {
           fuite = atof(col5);
         }
-        u_temp.volumeTraite = volumeBrut * (1.0 - (fuite / 100.0));
+        u_temp->volumeTraite = volumeBrut * (1.0 - (fuite / 100.0));
         ligneValide = 1;
       }
     }
