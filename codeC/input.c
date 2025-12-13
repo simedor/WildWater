@@ -41,25 +41,28 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
     if (strlen(ligne) == 0) continue;
     strcpy(ligne_copie, ligne);
 
+    // On récupère les données des différentes colonnes
     char* col1 = strtok(ligne_copie, ";");
     char* col2 = strtok(NULL, ";");
     char* col3 = strtok(NULL, ";");
     char* col4 = strtok(NULL, ";");
     char* col5 = strtok(NULL, ";");
 
+    // On filtre les lignes 
     if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
     if (strcmp(col1, "-") != 0 && strlen(col1) > 0) continue;
     if (!estNumerique(col4)) continue;
 
     pUsine u_temp = creerUsine();
-    strncpy(u_temp->ID, col3, 49);
+    strncpy(u_temp->ID, col2, 49);
 
-    int ligne_valide = 0;
+    int ligneValide = 0;
 
+    // La fonction atof convertit une chaîne de caractère en double
     if (strcmp(mode, "max") == 0) {
       if (strcmp(col3, "-") == 0) {
         u_temp->capacite = atof(col4);
-        ligne_valide = 1;
+        ligneValide = 1;
       }
     } else if (strcmp(mode, "src") == 0 || strcmp(mode, "real") == 0) {
       if (strcmp(col3, "-") != 0) {
@@ -72,12 +75,14 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
             fuite = atof(col5);
           }
           u_temp->volumeTraite = volumeBrut * (1.0 - (fuite / 100.0));
-          }
+        }
+        ligneValide = 1;
         }
       }
-    
-    int h = 0;
-    *a = insertionAVL(*a, *u_temp, &h);
+    if (lignValide == 1) {
+      int h = 0;
+      *a = insertionAVL(*a, *u_temp, &h);
+    }
   }
   printf("Les donnees ont ete rentres dans l'AVL\n");
   fclose(fichier);
