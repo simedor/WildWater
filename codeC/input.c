@@ -3,7 +3,7 @@
 #define BUFFER_SIZE 4096
 
 /*
-Supprimer le caractère de saut de ligne final
+Supprimer le caractère de saut de ligne final (\n ou \r)
 */
 void nettoyerLigne(char* chaine) {
   char* p = strchr(chaine, '\n');
@@ -23,9 +23,9 @@ int estNumerique(char* chaine) {
 }
 
 /*
-Charger les données pour faire l'histogramme des sources
+Charger les données pour faire l'histogramme des sources.
 */
-void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
+void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
   FILE* fichier = fopen(cheminFichier, "r");
   if (fichier == NULL) {
     fprintf(stderr, "Erreur : Impossible d'ouvrir le fichier %s\n", cheminFichier);
@@ -36,9 +36,9 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
   
   char ligne[BUFFER_SIZE];
   char ligne_copie[BUFFER_SIZE];
-
-  // Détection du mode de fonctionnement (0 = Leaks , 1 = Histo)
-  int estModeHisto = (strcmp(mode, "src") == 0 || strcmp(mode, "max") == 0 || strcmp(mode, "real") == 0);
+  
+  int histoActive = (strcmp(commande, "histo") == 0);
+  int leaksActive = (strcmp(commande, "leaks") == 0);
   
   while (fgets(ligne, BUFFER_SIZE, fichier) != NULL) {
     nettoyerLigne(ligne);
@@ -47,49 +47,67 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
     
     // On récupère les données des différentes colonnes
     char* col1 = strtok(ligne_copie, ";");
-    char* col2 = strtok(NULL, ";");
-    char* col3 = strtok(NULL, ";");
-    char* col4 = strtok(NULL, ";");
-    char* col5 = strtok(NULL, ";");
+    char* col2 = strtok(NULL, ";");           // Amont (Source, Usine, ou Stockage)
+    char* col3 = strtok(NULL, ";");           // Aval (Usine, Stockage, ou Jonction)
+    char* col4 = strtok(NULL, ";");           // Volume / Capacité
+    char* col5 = strtok(NULL, ";");           // Fuite
 
-    // On filtre les lignes 
+    // On vérifie si la ligne est valide
     if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
-    if (strcmp(col1, "-") != 0 && strlen(col1) > 0) continue;
     if (!estNumerique(col4)) continue;
-    // Si l'ID de la ligne ne correspond pas à l'argument on ignore
-    if (estModeHisto == 0 && strcmp(col2, mode) != 0) continue;
+    if (leaksActive && strcmp(col2, mode) != 0) continue;
 
-    pUsine u_temp = creerUsine();
-    strncpy(u_temp->ID, col2, 49);
+    // On initialise les variables pour stocker les données de la ligne 
+    char* idUsine = NULL;
+    double capacite = 0;
+    double volume = 0;
+    int lignePertinente = 0;
     
-    int ligneValide = 0;
+    // ====================================================
+    // LOGIQUE DE SELECTION DES LIGNES SELON LE MODE
+    // La fonction atof convertit une chaîne de caractère en double.
+    // La fonction memset initialise les valeurs à 0.
+    // ====================================================
 
-    // La fonction atof convertit une chaîne de caractère en double
-    // CAS 1 : Mode MAX (Capacité uniquement)
-    if (strcmp(mode, "max") == 0) {
-      if (strcmp(col3, "-") == 0) {
-        u_temp->capacite = atof(col4);
-        ligneValide = 1;
-      }
-    } 
-    // CAS 2 : Mode SRC ou REAL (Consommation uniquement)
-    else if (strcmp(mode, "src") == 0 || strcmp(mode, "real") == 0) {
-      if (strcmp(col3, "-") != 0) {
-        double volumeBrut = atof(col4);
-        if (strcmp(mode, "src") == 0) {
-          u_temp->volumeSource = volumeBrut;
-        } else {
-          double fuite = 0.0;
-          if (col5 != NULL && estNumerique(col5)) {
-            fuite = atof(col5);
-          }
-          u_temp->volumeTraite = volumeBrut * (1.0 - (fuite / 100.0));
+    if (histoActive) {
+      // CAS 1 : Mode MAX
+      // On cherche les lignes qui déninissent une usine
+      // Format: "-; ID_Usine; -; Capacité; -"
+      if (strcmp(mode, "max") == 0) {
+        if (strcmp(col3, "-") == 0 && strcmp(col2, "-") != 0) {
+          idUsine = col2;
+          capacite = atof(col4);
+          lignePertinente = 1;
         }
-        ligneValide = 1;
+      } 
+      
+      // CAS 2 : Mode SRC ou REAL
+      // On cherche les lignes de trajet : SOURCE -> USINE
+      // Format : "- ; ID_SOURCE ; ID_USINE ; VOLUME ; FUITE"
+      else if (strcmp(mode, "src") == 0 || strcmp(mode, "real") == 0) {
+        if (strcmp(col3, "-") != 0 && strcmp(col2, "-") != 0) {
+          idUsine = col3;
+          double volumeBrut = atof(col4);
+          
+          // On vérifie le mode (src ou real) pour savoir si on prend le volume brut ou si on prend en compte les fuites
+          if (strcmp(mode, "src") == 0) {
+            volume = volumeBrut;
+          } else {
+            double fuite = 0.0;
+            if (col5 != NULL && estNumerique(col5)) {
+              fuite = atof(col5);
+            }
+            volume = volumeBrut * (1.0 - (fuite / 100.0));
+          }
+          lignePertinente = 1;
+        }
       }
     } 
-    // CAS 3 : Mode LEAKS (Capacité et consommation)
-    else {
+      
+    // CAS 3 : Mode LEAKS
+    // ****** A FAIRE, VERSION SIMPLIFIEE ******
+    else if (leaksActive) {
+      /*
       if (strcmp(col3, "-") == 0) {
         // C'est une ligne de CAPACITÉ
         u_temp->capacite = atof(col4);
@@ -104,11 +122,37 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* mode) {
         u_temp->volumeTraite = volumeBrut * (1.0 - (fuite / 100.0));
         ligneValide = 1;
       }
+      */
     }
+    
+    // ====================================================
+    // INSERTION DANS L'AVL
+    // ====================================================
+    
+    if (lignePertinente == 1 && idUsine != NULL) {
+      // Initialisation de la structure usine à insérer
+      Usine u_temp;
+      memset(&u_temp, 0, sizeof(Usine));
 
-    if (ligneValide == 1) {
+      // Remplissage de la structure
+      strncpy(u_temp.ID, idUsine, 49);
+      u_temp.ID[49] = '\0';
+      if (histoActive) {
+        if (strcmp(mode, "max") == 0) {
+          u_temp.capacite = capacite;
+        } else if (strcmp(mode, "src") == 0) {
+          u_temp.volumeSource = volume;
+        } else if (strcmp(mode, "real") == 0) {
+          u_temp.volumeTraite = volume;
+        } 
+      } else if (leaksActive) {
+        u_temp.capacite = capacite;
+        u_temp.volumeTraite = volume;
+      }
+
+      // Insertion dans l'AVL
       int h = 0;
-      *a = insertionAVL(*a, *u_temp, &h);
+      *a = insertionAVL(*a, u_temp, &h);
     }
   }
   
