@@ -11,44 +11,66 @@ Arguments attendus (définis par le script Shell) :
 
 int main(int argc, char* argv[]) {
 
-  // 1. VÉRIFICATION DES ARGUMENTS
+  // 1. VERIFICATION DES ARGUMENTS
+  
   if (argc != 4) {
     fprintf(stderr, "Erreur : Arguments insuffisants.\n");
-    fprintf(stderr, "Usage : %s <fichier.csv> <histo|leaks> <mode|id_usine>\n", argv[0]);
     return 1;
   }
   char* cheminFichier = argv[1];
   char* commande = argv[2];
   char* mode = argv[3];
-  if (strcmp(commande, "histo") != 0) {
-    fprintf(stderr, "Erreur : Commande '%s' non gérée par ce programme.\n", commande);
-    fprintf(stderr, "Seule la commande 'histo' est disponible.\n");
+
+  // 2. VERIFICATION DE LA COMMANDE ET PREPARATION DU FICHIER DE SORTIE
+  
+  char nomFichierSortie[256];
+  int commandeEntree = 0; // 0 = histo, 1 = leaeks
+
+  if (strcmp(commande, "histo") == 0) {
+    commandeEntree = 0;
+    if (strcmp(mode, "src") == 0) {
+      strcpy(nomFichierSortie, "vol_source.csv");
+      printf("Mode histo src active\n");
+    } else if (strcmp(mode, "max") == 0) {
+      strcpy(nomFichierSortie, "vol_max.csv");
+      printf("Mode histo max active\n");
+    } else if (strcmp(mode, "real") == 0) {
+      strcpy(nomFichierSortie, "vol_real.csv");
+      printf("Mode histo real active\n");
+    } else {
+      fprintf(stderr, "Erreur : Mode '%s' inconnu.\n", mode);
+      return 1;
+    }
+  } else if (strcmp(commande, "leaks") == 0) {
+    commandeEntree = 1;
+    strcpy(nomFichierSortie, "leaks.csv");
+    printf("Mode leaks active\n");
+  } else {
+    fprintf(stderr, "Erreur : Commande '%s' inconnue.\n", commande);
     return 1;
   }
+  
+  // 3. CHARGEMENT DES DONNEES
 
-  // 2. INITIALISATION
   pAVL a = NULL;
-  char nomFichierSortie[256];
-
-  // 3. TRAITEMENT
   printf("Lecture du fichier %s en cours...\n", cheminFichier);
   chargerDonnees(cheminFichier, &a, mode);
-  printf("La fonction chargerDonnes a ete executee\n");
-  if (strcmp(mode, "src") == 0) {
-    strcpy(nomFichierSortie, "vol_source.csv");
-  } else if (strcmp(mode, "max") == 0) {
-    strcpy(nomFichierSortie, "vol_max.csv");
-  } else if (strcmp(mode, "real") == 0) {
-    strcpy(nomFichierSortie, "vol_real.csv");
-  } else {
-        fprintf(stderr, "Erreur : Mode '%s' inconnu pour la commande histo.\n", mode);
-        fprintf(stderr, "Modes disponibles : src, max, real\n");
-        return 3;
+  printf("Donnees chargees avec succes.\n");
+  if (a == NULL) {
+        fprintf(stderr, "L'arbre est vide apres chargement. Verifiez le fichier d'entree.\n");
   }
-  outputHisto(nomFichierSortie, a, mode);
+
+  // 4. GENERATION DU FICHIER CSV
+
+  if (commandeEntree == 0) {
+    outputHisto(nomFichierSortie, a, mode);
+  } else {
+    outputLeaks(nomFichierSortie, a);
+  }
   printf("Succes ! Fichier genere : %s\n", nomFichierSortie);
   
-  // 4. NETTOYAGE MÉMOIRE
+  // 5. NETTOYAGE MÉMOIRE
+  
   libererMemoireAVL(a);
   
   return 0;
