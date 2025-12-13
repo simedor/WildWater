@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
   pAVL a = NULL;
   printf("Lecture du fichier %s en cours...\n", cheminFichier);
-  chargerDonnees(cheminFichier, &a, mode);
+  chargerDonnees(cheminFichier, &a, commande, mode);
   printf("Donnees chargees avec succes.\n");
   if (a == NULL) {
         fprintf(stderr, "L'arbre est vide apres chargement. Verifiez le fichier d'entree.\n");
