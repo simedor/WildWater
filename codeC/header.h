@@ -47,7 +47,7 @@ void libererMemoireAVL(pAVL a);
 
 void nettoyerLigne(char* chaine);
 int estNumerique(char* chaine);
-void chargerDonnees(char* cheminFichier, pAVL* a, char* mode);
+void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode);
 
 // Module output.c
 
