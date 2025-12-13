@@ -6,10 +6,10 @@
 #include <math.h>
 
 /*
-Structure représentant les données d'une usine
-- volumeSource : Somme des volumes captés (utilisé pour histo src)
-- capacite : Capacité maximale (utilisé pour histo max)
-- volumeTraite : Volume réel (utilisé pour histo real)
+Structure représentant une usine.
+- volumeSource : Somme des volumes captés
+- capacite : Capacité maximale
+- volumeTraite : Volume réel
 - ID : Identifiant unique
 */
 typedef struct usine {
@@ -20,7 +20,28 @@ typedef struct usine {
 } Usine, *pUsine;
 
 /*
-Structure de l'arbre AVL, contenant un pointeur vers une usine
+Structure représentant un noeud du réseau (Usine, Stockage, Jonction, etc.).
+*/
+typedef struct node {
+    char ID[50];
+    int nbEnfants;
+    tuyau* listeEnfants;
+    struct node* fg;
+    struct node* fd;
+    int equilibre;
+} Node, *pNode;
+
+/*
+Structure représentant un tuyau.
+*/
+typedef struct tuyau {
+    struct pNode destinataire;
+    double fuite;
+    struct tuyau* pSuivant;
+} Tuyau;
+
+/*
+Structure de l'arbre AVL, contenant un pointeur vers une usine.
 */
 typedef struct AVL {
   Usine* u;
