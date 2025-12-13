@@ -1,13 +1,17 @@
 # WildWater
-**Auteurs :** Alexandre Godineau, Siméon Dorninger, Timothée Renouf
-**Promotion :** Pré-Ing2 2025-2026
+**Auteurs :** 
+**GODINEAU Alexandre**  (https://github.com/Alegodix) <br /> 
+**Siméon Dorninger** (https://github.com/simedor) <br /> 
+**Timothée Renouf** (https://github.com/timothee23-gh) <br /> 
+**Promotion :** Pré-Ing2 2025-2026 <br />
+
 ## Projet d'info 3
 
 ## Structure du dépot GitHub:
 
 ```text ProjetWildWater/
 ├── data/              # Pour stocker le fichier CSV source
-├── codeC/             # Dossier contenant tout le code C
+├── codeC/             # Dossier contenant  tout le code C
 │   ├── Makefile       # Fichier de compilation 
 │   ├── main.c         # Point d'entrée du C
 │   ├── header.h       # Déclarations globales (structures, prototypes)
