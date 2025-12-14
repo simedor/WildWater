@@ -5,6 +5,8 @@
 #include <string.h>
 #include <math.h>
 
+typedef struct tuyau* pTuyau;
+
 /*
 Structure représentant une usine.
 - volumeSource : Somme des volumes captés
@@ -19,26 +21,27 @@ typedef struct usine {
   double volumeTraite;
 } Usine, *pUsine;
 
+
 /*
 Structure représentant un noeud du réseau (Usine, Stockage, Jonction, etc.).
 */
 typedef struct node {
-    char ID[50];
-    int nbEnfants;
-    tuyau* listeEnfants;
-    struct node* fg;
-    struct node* fd;
-    int equilibre;
+  char ID[50];
+  int nbEnfants;
+  pTuyau listeEnfants;
+  struct node* fg;
+  struct node* fd;
+  int equilibre;
 } Node, *pNode;
 
 /*
 Structure représentant un tuyau.
 */
 typedef struct tuyau {
-    struct pNode destinataire;
+    pNode destinataire;
     double fuite;
     struct tuyau* pSuivant;
-} Tuyau;
+} Tuyau, *pTuyau;
 
 /*
 Structure de l'arbre AVL, contenant un pointeur vers une usine.
