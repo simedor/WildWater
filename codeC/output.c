@@ -1,7 +1,9 @@
 #include "header.h"
+#include "couleurs.h" // Ajout
 
 // --- Affichage pour HISTO ---
 void parcoursInfixeHisto(pAVL a, FILE* fichier, char* mode) {
+    // ... [Code inchangé] ...
     if (a != NULL) {
         parcoursInfixeHisto(a->fg, fichier, mode);
         
@@ -32,6 +34,7 @@ void parcoursInfixeHisto(pAVL a, FILE* fichier, char* mode) {
 
 // --- Affichage pour LEAKS ---
 void parcoursInfixeLeaks(pAVL a, FILE* fichier) {
+    // ... [Code inchangé] ...
     if (a != NULL) {
         parcoursInfixeLeaks(a->fg, fichier);
         
@@ -74,5 +77,5 @@ void outputLeaks(char* nomFichier, pAVL a) {
     parcoursInfixeLeaks(a, fichier);
     
     fclose(fichier);
-    printf("Fichier %s généré.\n", nomFichier);
+    printf(VERT "Fichier %s généré.\n" RESET, nomFichier);
 }

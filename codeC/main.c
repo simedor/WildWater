@@ -1,4 +1,5 @@
-# include "header.h"
+#include "header.h"
+#include "couleurs.h" 
 
 /*
 Fonction principale.
@@ -14,7 +15,7 @@ int main(int argc, char* argv[]) {
   // 1. VERIFICATION DES ARGUMENTS
   
   if (argc != 4) {
-    fprintf(stderr, "Erreur : Arguments insuffisants.\n");
+    fprintf(stderr, ROUGE "Erreur : Arguments insuffisants.\n" RESET);
     return 1;
   }
   char* cheminFichier = argv[1];
@@ -30,33 +31,33 @@ int main(int argc, char* argv[]) {
     commandeEntree = 0;
     if (strcmp(mode, "src") == 0) {
       strcpy(nomFichierSortie, "vol_source.csv");
-      printf("Mode histo src active\n");
+      printf(CYAN "Mode histo src active\n" RESET);
     } else if (strcmp(mode, "max") == 0) {
       strcpy(nomFichierSortie, "vol_max.csv");
-      printf("Mode histo max active\n");
+      printf(CYAN "Mode histo max active\n" RESET);
     } else if (strcmp(mode, "real") == 0) {
       strcpy(nomFichierSortie, "vol_real.csv");
-      printf("Mode histo real active\n");
+      printf(CYAN "Mode histo real active\n" RESET);
     } else {
-      fprintf(stderr, "Erreur : Mode '%s' inconnu.\n", mode);
+      fprintf(stderr, ROUGE "Erreur : Mode '%s' inconnu.\n" RESET, mode);
       return 1;
     }
   } else if (strcmp(commande, "leaks") == 0) {
     commandeEntree = 1;
     strcpy(nomFichierSortie, "leaks.csv");
-    printf("Mode leaks active\n");
+    printf(CYAN "Mode leaks active\n" RESET);
   } else {
-    fprintf(stderr, "Erreur : Commande '%s' inconnue.\n", commande);
+    fprintf(stderr, ROUGE "Erreur : Commande '%s' inconnue.\n" RESET, commande);
     return 1;
   }
   
   // 3. CHARGEMENT DES DONNEES
 
   pAVL a = NULL;
-  printf("Lecture du fichier %s en cours...\n", cheminFichier);
+  printf(JAUNE "Lecture du fichier %s en cours...\n" RESET, cheminFichier);
   chargerDonnees(cheminFichier, &a, commande, mode);
-  printf("Donnees chargees avec succes.\n");
-  if (a == NULL) fprintf(stderr, "L'arbre est vide apres chargement. Verifiez le fichier d'entree.\n");
+  printf(VERT "Donnees chargees avec succes.\n" RESET);
+  if (a == NULL) fprintf(stderr, MAGENTA "L'arbre est vide apres chargement. Verifiez le fichier d'entree.\n" RESET);
 
   // 4. GENERATION DU FICHIER CSV
 
@@ -65,7 +66,7 @@ int main(int argc, char* argv[]) {
   } else {
     outputLeaks(nomFichierSortie, a);
   }
-  printf("Succes ! Fichier genere : %s\n", nomFichierSortie);
+  printf(VERT_CLAIR "Succes ! Fichier genere : %s\n" RESET, nomFichierSortie);
   
   // 5. NETTOYAGE MÉMOIRE
   
