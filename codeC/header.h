@@ -54,8 +54,8 @@ pAVL rotationDroite(pAVL a);
 pAVL equilibrerAVL(pAVL a);
 pAVL rotationGaucheDouble(pAVL a);
 pAVL rotationDroiteDouble(pAVL a);*/
-pUsine rechercherNoeud(pAVL a, char* ID);
-void ajouterVoisin(Usine* parent, Usine* enfant, double fuite);
+pUsine rechercher(pAVL a, char* ID);
+void ajouterVoisin(pUsine parent, pUsine enfant, double fuite);
 pAVL creerArbre(Usine u);
 pAVL insertionAVL(pAVL a, Usine u, int* h);
 void libererMemoireAVL(pAVL a);
