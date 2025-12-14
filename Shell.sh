@@ -82,6 +82,14 @@ OUTPUT_DAT="vol_${ARGUMENT}.dat"
     fi
 
 elif [ "$COMMAND" = "leaks" ]; then
+    ./"$EXEC_PATH" "$DATA_FILE" "$COMMAND" "$ARGUMENT"
+    RET=$?
+
+    # Vérification du succès du programme C
+    if [ $RET -ne 0 ]; then
+        echo "Le programme C a renvoyé une erreur (Code $RET)."
+    exit $RET
+    fi
     echo "Calcul des fuites terminé. Vérifiez leaks.csv."
 
 fi
