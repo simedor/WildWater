@@ -5,7 +5,14 @@
 #include <string.h>
 #include <math.h>
 
-typedef struct tuyau* pTuyau;
+/*
+Structure représentant un tuyau.
+*/
+typedef struct tuyau {
+    struct usine* noeud;
+    double pourcentageFuite;
+    struct tuyau* pSuivant;
+} Tuyau, *pTuyau;
 
 /*
 Structure représentant une usine.
@@ -16,32 +23,17 @@ Structure représentant une usine.
 */
 typedef struct usine {
   char ID[50];
+
+  // pour histo
   double volumeSource;
   double capacite;
   double volumeTraite;
-} Usine, *pUsine;
 
-
-/*
-Structure représentant un noeud du réseau (Usine, Stockage, Jonction, etc.).
-*/
-typedef struct node {
-  char ID[50];
+  // pour leaks
   int nbEnfants;
   pTuyau listeEnfants;
-  struct node* fg;
-  struct node* fd;
-  int equilibre;
-} Node, *pNode;
 
-/*
-Structure représentant un tuyau.
-*/
-typedef struct tuyau {
-    pNode destinataire;
-    double fuite;
-    struct tuyau* pSuivant;
-} Tuyau, *pTuyau;
+} Usine, *pUsine;
 
 /*
 Structure de l'arbre AVL, contenant un pointeur vers une usine.
@@ -62,6 +54,8 @@ pAVL rotationDroite(pAVL a);
 pAVL equilibrerAVL(pAVL a);
 pAVL rotationGaucheDouble(pAVL a);
 pAVL rotationDroiteDouble(pAVL a);*/
+pUsine rechercherNoeud(pAVL a, char* ID);
+void ajouterVoisin(Usine* parent, Usine* enfant, double fuite);
 pAVL creerArbre(Usine u);
 pAVL insertionAVL(pAVL a, Usine u, int* h);
 void libererMemoireAVL(pAVL a);
