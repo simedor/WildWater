@@ -1,10 +1,10 @@
 # WildWater
 
 ## COMPILATION : 
-- linux : 
-make clean
-make
-./Shell.sh data/data.csv histo src
+- linux : <br />
+make clean <br />
+make <br />
+./Shell.sh data/data.csv histo src <br />
 
 **Auteurs :** <br />
 
