@@ -57,13 +57,13 @@ typedef struct AVL {
 
 int max(int a, int b);
 int min(int a, int b);
-pAVL rotationGauche(pAVL a);
+/*pAVL rotationGauche(pAVL a);
 pAVL rotationDroite(pAVL a);
+pAVL equilibrerAVL(pAVL a);
 pAVL rotationGaucheDouble(pAVL a);
-pAVL rotationDroiteDouble(pAVL a);
+pAVL rotationDroiteDouble(pAVL a);*/
 pAVL creerArbre(Usine u);
 pAVL insertionAVL(pAVL a, Usine u, int* h);
-pAVL equilibrerAVL(pAVL a);
 void libererMemoireAVL(pAVL a);
 
 // Module input.c

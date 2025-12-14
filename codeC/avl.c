@@ -1,5 +1,9 @@
 #include "header.h"
 
+int max(int a, int b) { return a > b ? a : b; }
+
+int min(int a, int b) { return a < b ? a : b; }
+
 pAVL creerArbre(Usine u) { 
 	// Allocation mémoire de l'arbre et de la structure Usine contenue
 	pAVL nouveau = malloc(sizeof(AVL));
@@ -19,15 +23,6 @@ pAVL creerArbre(Usine u) {
 	return nouveau;
 }
 
-int max(int a, int b) { 
-	if (a > b) return a;
-	return b;
-}
-
-int min(int a, int b) {
-	if (a < b) return a;
-	return b;
-}
 
 pAVL rotationGauche(pAVL a) {
     int eq_a = 0;
@@ -92,7 +87,6 @@ pAVL insertionAVL(pAVL a, Usine u, int* h) {
 	} else if (cmp > 0) {
 		a->fd = insertionAVL(a->fd, u, h);
 	} else {
-		// L'usine existe déjà mais on doit additionner les volumes
 		a->u->volumeSource += u.volumeSource;
 		a->u->volumeTraite += u.volumeTraite;
 		if (u.capacite > 0) {
