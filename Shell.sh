@@ -58,28 +58,29 @@ if [ $RET -ne 0 ]; then
     exit $RET
 fi
 
-OUTPUT_DAT="vol_${ARGUMENT}.dat"
-    
+if [ "$COMMAND" = "histo" ]; then
+    if [ "$ARGUMENT" = "src" ]; then FILE="vol_source.csv"; fi
+    if [ "$ARGUMENT" = "max" ]; then FILE="vol_max.csv"; fi
+    if [ "$ARGUMENT" = "real" ]; then FILE="vol_real.csv"; fi
 
-    if [ -f "$OUTPUT_DAT" ]; then
-        echo "Fichier de données trouvé : $OUTPUT_DAT"
-
-        gnuplot -e "
-            set terminal png size 1200,800;
-            set output 'graph_${ARGUMENT}.png'; 
-            set style data histograms;
-            set style fill solid;
-            set title 'Histogramme des usines (${ARGUMENT})';
-            set xlabel 'Usines';
-            set ylabel 'Volume (M.m3)';
-            plot '$OUTPUT_DAT' using 2:xtic(1) title '${ARGUMENT}';
-        "
+    if [ -f "$FILE" ]; then
+        echo "Génération du graphique pour $FILE..."
+        cat <<EOF > plot_script.gp
+set terminal png size 1200,800 enhanced font 'Arial,10'
+set output '${ARGUMENT}.png'
+set datafile separator ';'
+set title 'Histogramme : ${ARGUMENT}'
+set style data histograms
+set style fill solid 1.0 border -1
+plot '${FILE}' using 2:xtic(1) title '${ARGUMENT}'
+EOF
         
-        echo "Graphique généré avec succès : graph_${ARGUMENT}.png"
-    else
-        echo "Erreur : Le fichier '$OUTPUT_DAT' n'a pas été généré par le programme C."
-        exit 1
-    fi
+        gnuplot plot_script.gp
+        rm plot_script.gp
+        echo "Graphique généré : ${ARGUMENT}.png"
+ else
+        echo "Avertissement : Le fichier de données pour le graphique ($FILE) n'a pas été trouvé."
+fi
 
 elif [ "$COMMAND" = "leaks" ]; then
     ./"$EXEC_PATH" "$DATA_FILE" "$COMMAND" "$ARGUMENT"
