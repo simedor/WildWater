@@ -23,6 +23,20 @@ int estNumerique(char* chaine) {
 }
 
 /*
+Retourne un pointeur vers le noeud dans l'arbre ou le crée s'il n'existe pas.
+*/
+pUsine trouverOuCreer(pAVL* a, char* ID) {
+  pUsine usineExistante = rechercher(*a, ID);
+  if (usineExistante != NULL) return usineExistante;
+  Usine temp;
+  memset(&temp, 0, sizeof(Usine));
+  strncpy(temp.ID, ID, 49);
+  int h = 0;
+  *a = insertionAVL(*a, temp, &h);
+  return rechercher(*a, ID);
+}
+
+/*
 Charger les données pour faire l'histogramme des sources.
 */
 void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
@@ -55,7 +69,6 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
     // On vérifie si la ligne est valide
     if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
     if (!estNumerique(col4)) continue;
-    if (leaksActive && strcmp(col2, mode) != 0) continue;
 
     // On initialise les variables pour stocker les données de la ligne 
     char* idUsine = NULL;
@@ -107,22 +120,21 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
     // CAS 3 : Mode LEAKS
     // ****** A FAIRE, VERSION SIMPLIFIEE ******
     else if (leaksActive) {
-      /*
-      if (strcmp(col3, "-") == 0) {
-        // C'est une ligne de CAPACITÉ
-        u_temp->capacite = atof(col4);
-        ligneValide = 1;
-      } else {
-        // C'est une ligne de CONSOMMATION
-        double volumeBrut = atof(col4);
-        double fuite = 0.0;
-        if (col5 != NULL && estNumerique(col5)) {
-          fuite = atof(col5);
+      if ((strcmp(col1, mode) == 0) || (strcmp(col2, mode) == 0)) {
+        pUsine parent = trouverOuCreer(a, col2);
+
+        if (strcmp(col3, "-") == 0) {
+          // C'est une définition de capacité (Pas de voisin)
+          parent->capacite = atof(col4);
+        } else {
+          // C'est un tuyau vers un Enfant (Aval)
+          pUsine enfant = trouverOuCreer(a, col3);
+                    
+          // Création du lien
+          double fuite = (col5 && estNumerique(col5)) ? atof(col5) : 0.0;
+          ajouterVoisin(parent, enfant, fuite);
         }
-        u_temp->volumeTraite = volumeBrut * (1.0 - (fuite / 100.0));
-        ligneValide = 1;
       }
-      */
     }
     
     // ====================================================
@@ -145,9 +157,6 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
         } else if (strcmp(mode, "real") == 0) {
           u_temp.volumeTraite = volume;
         } 
-      } else if (leaksActive) {
-        u_temp.capacite = capacite;
-        u_temp.volumeTraite = volume;
       }
 
       // Insertion dans l'AVL
