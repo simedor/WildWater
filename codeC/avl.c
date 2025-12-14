@@ -19,6 +19,8 @@ pAVL creerArbre(Usine u) {
 	nouveau->u->capacite = u.capacite;
 	nouveau->fg = nouveau->fd = NULL;
 	nouveau->equilibre = 0;
+	nouveau->u->listeEnfants = NULL;
+    nouveau->u->nbEnfants = 0;
 	
 	return nouveau;
 }
@@ -109,8 +111,41 @@ void libererMemoireAVL(pAVL a) {
         libererMemoireAVL(a->fg);
         libererMemoireAVL(a->fd);
 		if (a->u != NULL) {
+			pTuyau enfant = a->u->listeEnfants;
+            while (enfant != NULL) {
+            	pTuyau temp = enfant;
+                enfant = enfant->pSuivant;
+                free(temp);
+            }
 			free(a->u);
 		}
         free(a);
     }
+}
+
+/*
+Retourne un pointeur vers l'Usine si elle est dans l'AVL, sinon NULL
+*/
+Usine* rechercher(pAVL a, char* ID) {
+    if (a == NULL) return NULL;
+    int cmp = strcmp(ID, a->u->ID);
+    if (cmp < 0) return rechercher(a->fg, ID);
+    if (cmp > 0) return rechercher(a->fd, ID);
+	return a->u;
+}
+
+/*
+Ajoute enfant dans la liste des enfants de parent.
+*/
+void ajouterVoisin(pUsine parent, pUsine enfant, double fuite) {
+    pTuyau nouveauTuyau = malloc(sizeof(Tuyau));
+    if (nouveauTuyau == NULL) exit(1);
+    
+    nouveauTuyau->noeud = enfant;
+    nouveauTuyau->pourcentageFuite = fuite;
+    
+    nouveauTuyau->pSuivant = parent->listeEnfants;
+    parent->listeEnfants = nouveauTuyau;
+    
+    parent->nbEnfants++;
 }
