@@ -1,5 +1,3 @@
-# Fichiers de compilation générés par GCC/Make
-############################################
 # Fichiers objets
 *.o
 # Fichiers dépendances
@@ -7,7 +5,7 @@
 # Exécutable principal (produit par make)
 cwire
 cwire.exe
-# Exécutables de test (si vous en créez)
+# Exécutables de test 
 *.exe
 *.out
 

@@ -1,5 +1,11 @@
 # WildWater
 
+## COMPILATION : 
+- linux : 
+make clean
+make
+./Shell.sh data/data.csv histo src
+
 **Auteurs :** <br />
 
 **GODINEAU Alexandre**  (https://github.com/Alegodix) <br /> 
