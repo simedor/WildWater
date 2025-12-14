@@ -59,9 +59,7 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
 
     // On initialise les variables pour stocker les données de la ligne 
     char* idUsine = NULL;
-    char* id_temp = NULL;
     double capacite = 0;
-    double capacite_temp = 0;
     double volume = 0;
     int lignePertinente = 0;
     
@@ -78,9 +76,7 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
       if (strcmp(mode, "max") == 0) {
         if (strcmp(col3, "-") == 0 && strcmp(col2, "-") != 0) {
           idUsine = col2;
-          id_temp=idUsine;
           capacite = atof(col4);
-          capacite_temp = capacite;
           lignePertinente = 1;
         }
       } 
@@ -91,9 +87,6 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
       else if (strcmp(mode, "src") == 0 || strcmp(mode, "real") == 0) {
         if (strcmp(col3, "-") != 0 && strcmp(col2, "-") != 0) {
           idUsine = col3;
-          if(strcmp(idUsine, id_temp)==0){
-              capacite = capacite_temp;
-          }
           double volumeBrut = atof(col4);
           
           // On vérifie le mode (src ou real) pour savoir si on prend le volume brut ou si on prend en compte les fuites
