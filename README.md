@@ -20,13 +20,13 @@
 ```text ProjetWildWater/
 ├── data/              # Pour stocker le fichier CSV source
 ├── codeC/             # Dossier contenant  tout le code C
-│   ├── Makefile       # Fichier de compilation 
 │   ├── main.c         # Point d'entrée du C
 │   ├── header.h       # Déclarations globales (structures, prototypes)
 │   ├── avl.c          # Fonctions de gestion des AVL (rotation, insertion...)
 │   ├── input.c        # Gestion de la lecture du CSV
 │   └── output.c       # Gestion de l'écriture des fichiers temporaires
+│   Makefile           # Fichier de compilation 
 ├── tests/             # Dossier pour les preuves de tests (images, logs)
-├── myScript.sh        # Le script Shell (point d'entrée principal)
-└── ReadMe.md          # Instructions de compilation/utilisation
+├── Launch.sh        # Le script Shell (point d'entrée principal)
+└── README.md          # Instructions de compilation/utilisation
 ``` 
