@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
   if (commandeEntree == 0) {
     outputHisto(nomFichierSortie, a, mode);
   } else {
-    outputLeaks(nomFichierSortie, a);
+    outputLeaks(nomFichierSortie, a, mode);
   }
   printf(VERT_CLAIR "Succes ! Fichier genere : %s\n" RESET, nomFichierSortie);
   
