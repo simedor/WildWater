@@ -70,8 +70,7 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode);
 // Module output.c
 
 void afficherNoeud(Usine* u, FILE* f, char* mode);
-void afficherNoeudLeaks(Usine* u, FILE* f);
 void parcoursInfixeInverse(pAVL a, FILE* f, char* mode);
-void parcoursInfixe(pAVL a, FILE* f);
+double sommePertes(pUsine u, double eauArrivante);
 void outputHisto(char* nomFichier, pAVL a, char* mode);
-void outputLeaks(char* nomFichier, pAVL a);
+void outputLeaks(char* nomFichier, pAVL a, char* ID);
