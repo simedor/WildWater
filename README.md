@@ -27,6 +27,6 @@
 │   └── output.c       # Gestion de l'écriture des fichiers temporaires
 │   Makefile           # Fichier de compilation 
 ├── tests/             # Dossier pour les preuves de tests (images, logs)
-├── Launch.sh        # Le script Shell (point d'entrée principal)
+├── Launch.sh          # Le script Shell (point d'entrée principal)
 └── README.md          # Instructions de compilation/utilisation
 ``` 
