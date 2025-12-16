@@ -52,9 +52,9 @@ void outputHisto(char* nomFichier, pAVL a, char* mode) {
     if (strcmp(mode, "src") == 0) {
         fprintf(fichier, "identifier;volume source(M.m3.year-1);capacite(M.m3.year-1)\n");
     } else if (strcmp(mode, "real") == 0) {
-        fprintf(fichier, "identifier;volume traite(M.m3.year-1);capacite(M.m3.year-1)\n");
+        fprintf(fichier, "identifier;volume traité(M.m3.year-1);capacite(M.m3.year-1)\n");
     } else if (strcmp(mode, "max") == 0) {
-        fprintf(fichier, "identifier;capacite(M.m3.year-1)\n");
+        fprintf(fichier, "identifier;capacité(M.m3.year-1)\n");
     } else {
         fprintf(stderr, ROUGE "Erreur : Mode '%s' non reconnu.\n" RESET, mode);
         fclose(fichier);
@@ -102,7 +102,7 @@ Générer le fichier CSV pour leaks
 void outputLeaks(char* nomFichier, pAVL a, char* ID) {
     FILE* fichier = fopen(nomFichier, "w");
     if (fichier == NULL) {
-        perror("Erreur creation fichier leaks");
+        perror("Erreur création fichier leaks");
         exit(1);
     }
 

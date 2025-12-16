@@ -13,12 +13,12 @@ c-wildwater_v3.dat
 
 # Fichier tests inutiles
 50-10_usine.txt
-input2.c
-output2.c 
 
 # Fichiers générés par le programme (CSV de sortie)
 ############################################
 vol_source.csv
+vol_max.csv
+vol_real.csv
 src_max.csv
 src_min.csv
 temp_top10.csv

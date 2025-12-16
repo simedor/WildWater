@@ -31,13 +31,13 @@ int main(int argc, char* argv[]) {
     commandeEntree = 0;
     if (strcmp(mode, "src") == 0) {
       strcpy(nomFichierSortie, "vol_source.csv");
-      printf(CYAN "Mode histo src active\n" RESET);
+      printf(CYAN "Mode histo src activ\n" RESET);
     } else if (strcmp(mode, "max") == 0) {
       strcpy(nomFichierSortie, "vol_max.csv");
-      printf(CYAN "Mode histo max active\n" RESET);
+      printf(CYAN "Mode histo max activé\n" RESET);
     } else if (strcmp(mode, "real") == 0) {
       strcpy(nomFichierSortie, "vol_real.csv");
-      printf(CYAN "Mode histo real active\n" RESET);
+      printf(CYAN "Mode histo real activé\n" RESET);
     } else {
       fprintf(stderr, ROUGE "Erreur : Mode '%s' inconnu.\n" RESET, mode);
       return 1;
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
   } else if (strcmp(commande, "leaks") == 0) {
     commandeEntree = 1;
     strcpy(nomFichierSortie, "leaks.csv");
-    printf(CYAN "Mode leaks active\n" RESET);
+    printf(CYAN "Mode leaks activé\n" RESET);
   } else {
     fprintf(stderr, ROUGE "Erreur : Commande '%s' inconnue.\n" RESET, commande);
     return 1;
@@ -56,8 +56,8 @@ int main(int argc, char* argv[]) {
   pAVL a = NULL;
   printf(JAUNE "Lecture du fichier %s en cours...\n" RESET, cheminFichier);
   chargerDonnees(cheminFichier, &a, commande, mode);
-  printf(VERT "Donnees chargees avec succes.\n" RESET);
-  if (a == NULL) fprintf(stderr, MAGENTA "L'arbre est vide apres chargement. Verifiez le fichier d'entree.\n" RESET);
+  printf(VERT "Donnees chargées avec succès.\n" RESET);
+  if (a == NULL) fprintf(stderr, MAGENTA "L'arbre est vide après chargement. Vérifiez le fichier d'entrée.\n" RESET);
 
   // 4. GENERATION DU FICHIER CSV
 
@@ -66,11 +66,12 @@ int main(int argc, char* argv[]) {
   } else {
     outputLeaks(nomFichierSortie, a, mode);
   }
-  printf(VERT_CLAIR "Succes ! Fichier genere : %s\n" RESET, nomFichierSortie);
+  printf(VERT_CLAIR "Succès ! Fichier généré : %s\n" RESET, nomFichierSortie);
   
   // 5. NETTOYAGE MÉMOIRE
   
   libererMemoireAVL(a);
+  printf("Mémoire AVL libérée.\n");
   
   return 0;
 }
