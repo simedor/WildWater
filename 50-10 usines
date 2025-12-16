@@ -15,3 +15,29 @@ head -n 50 "$CSV_OUT_TRIE" > "$CSV_OUT_MIN"
 
 tail -n 10 "$CSV_OUT_TRIE" > "$CSV_OUT_MAX"
 fi
+LABEL_Y="Volume (M.m^3)"
+TITRE_GRAPHE="Histogramme des Usines"
+
+gnuplot <<EOF
+    set terminal png size 1200,800 enhanced font "Arial,11"
+    set datafile separator ";"    # Important : indique que le CSV utilise des points-virgules
+    set style data histograms     # Type de graphique : Barres
+    set style fill solid 1.0 border -1 # Remplissage solide des barres
+    set boxwidth 0.7              # Largeur des barres
+    set grid y                    # Grille horizontale pour la lisibilité
+    set ylabel "$LABEL_Y"         # Titre de l'axe vertical
+    set xtics rotate by -45 scale 0 # Rotation des noms des usines (sinon illisible)
+    set bmargin 10                # Marge en bas pour laisser place aux noms rotatés
+
+    set output 'img_max_10.png'   # Nom du fichier image de sortie
+    set title "$TITRE_GRAPHE - Top 10 (Grandes)"
+    # using 2:xtic(1) = Utilise la colonne 2 pour la hauteur, et la colonne 1 pour le nom (x-axis)
+    plot "$FICHIER_MAX" using 2:xtic(1) title 'Volume' linecolor rgb "#2ca02c"
+
+    set output 'img_min_50.png'   # Nom du fichier image de sortie
+    set title "$TITRE_GRAPHE - Top 50 (Petites)"
+    # On enlève la légende (notitle) car il y a beaucoup de barres
+    plot "$FICHIER_MIN" using 2:xtic(1) notitle linecolor rgb "#d62728"
+EOF
+
+echo "Graphiques générés : img_max_10.png et img_min_50.png"
