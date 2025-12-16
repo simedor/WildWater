@@ -60,11 +60,11 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
     strcpy(ligne_copie, ligne);
     
     // On récupère les données des différentes colonnes
-    char* col1 = strtok(ligne_copie, ";");
-    char* col2 = strtok(NULL, ";");           // Amont (Source, Usine, ou Stockage)
-    char* col3 = strtok(NULL, ";");           // Aval (Usine, Stockage, ou Jonction)
-    char* col4 = strtok(NULL, ";");           // Volume / Capacité
-    char* col5 = strtok(NULL, ";");           // Fuite
+    char* col1 = strsep(ligne_copie, ";");
+    char* col2 = strsep(NULL, ";");           // Amont (Source, Usine, ou Stockage)
+    char* col3 = strsep(NULL, ";");           // Aval (Usine, Stockage, ou Jonction)
+    char* col4 = strsep(NULL, ";");           // Volume / Capacité
+    char* col5 = strsep(NULL, ";");           // Fuite
 
     // On vérifie si la ligne est valide
     if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
