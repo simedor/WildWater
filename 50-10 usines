@@ -30,12 +30,12 @@ gnuplot <<EOF
     set bmargin 10                # Marge en bas pour laisser place aux noms rotatés
 
     set output 'img_max_10.png'   # Nom du fichier image de sortie
-    set title "$TITRE_GRAPHE - Top 10 (Grandes)"
+    set title "$TITRE_GRAPHE - 10 plus grandes"
     # using 2:xtic(1) = Utilise la colonne 2 pour la hauteur, et la colonne 1 pour le nom (x-axis)
     plot "$FICHIER_MAX" using 2:xtic(1) title 'Volume' linecolor rgb "#2ca02c"
 
     set output 'img_min_50.png'   # Nom du fichier image de sortie
-    set title "$TITRE_GRAPHE - Top 50 (Petites)"
+    set title "$TITRE_GRAPHE - 50 plus petites"
     # On enlève la légende (notitle) car il y a beaucoup de barres
     plot "$FICHIER_MIN" using 2:xtic(1) notitle linecolor rgb "#d62728"
 EOF
