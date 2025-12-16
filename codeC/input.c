@@ -54,119 +54,119 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
   int histoActive = (strcmp(commande, "histo") == 0);
   int leaksActive = (strcmp(commande, "leaks") == 0);
   
-  while (fgets(ligne, BUFFER_SIZE, fichier) != NULL) {
-    nettoyerLigne(ligne);
-    if (strlen(ligne) == 0) continue;
-    strcpy(ligne_copie, ligne);
+void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
+    FILE* fichier = fopen(cheminFichier, "r");
+    if (fichier == NULL) {
+        perror("Erreur ouverture fichier");
+        exit(1);
+    }
 
-    char* col1 = strtok(ligne_copie, ";");
-    char* col2 = strtok(NULL, ";");
-    char* col3 = strtok(NULL, ";");
-    char* col4 = strtok(NULL, ";");
-    char* col5 = strtok(NULL, ";");
+    char ligne[BUFFER_SIZE];
+    int histoActive = (strcmp(commande, "histo") == 0);
+    int leaksActive = (strcmp(commande, "leaks") == 0);
+    int capaciteTrouvee = 0;
 
-    // On vérifie si la ligne est valide
-    if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
-    if (!estNumerique(col4)) continue;
+    while (fgets(ligne, BUFFER_SIZE, fichier) != NULL) {
+        nettoyerLigne(ligne);
+        if (strlen(ligne) == 0) continue;
 
-    // On initialise les variables pour stocker les données de la ligne 
-    char* idUsine = NULL;
-    double capacite = 0;
-    double volume = 0;
-    int lignePertinente = 0;
-    
-    // ====================================================
-    // LOGIQUE DE SELECTION DES LIGNES SELON LE MODE
-    // La fonction atof convertit une chaîne de caractère en double.
-    // La fonction memset initialise les valeurs à 0.
-    // ====================================================
-
-    if (histoActive) {
-      // CAS 1 : Mode MAX
-      // On cherche les lignes qui déninissent une usine
-      // Format: "-; ID_Usine; -; Capacité; -"
-      if (strcmp(mode, "max") == 0) {
-        if (strcmp(col3, "-") == 0 && strcmp(col2, "-") != 0) {
-          idUsine = col2;
-          capacite = atof(col4);
-          lignePertinente = 1;
-        }
-      } 
-      
-      // CAS 2 : Mode SRC ou REAL
-      // On cherche les lignes de trajet : SOURCE -> USINE
-      // Format : "- ; ID_SOURCE ; ID_USINE ; VOLUME ; FUITE"
-      else if (strcmp(mode, "src") == 0 || strcmp(mode, "real") == 0) {
-        if (strcmp(col3, "-") != 0 && strcmp(col2, "-") != 0) {
-          idUsine = col3;
-          double volumeBrut = atof(col4);
-          
-          // On vérifie le mode (src ou real) pour savoir si on prend le volume brut ou si on prend en compte les fuites
-          if (strcmp(mode, "src") == 0) {
-            volume = volumeBrut;
-          } else {
-            double fuite = 0.0;
-            if (col5 != NULL && estNumerique(col5)) {
-              fuite = atof(col5);
+        // Découpage manuel (robuste pour les champs vides)
+        char* cols[5] = {NULL, NULL, NULL, NULL, NULL};
+        char* ptr = ligne;
+        int i = 0;
+        cols[i++] = ptr;
+        while (*ptr && i < 5) {
+            if (*ptr == ';') {
+                *ptr = '\0';
+                cols[i++] = ptr + 1;
             }
-            volume = volumeBrut * (1.0 - (fuite / 100.0));
-          }
-          lignePertinente = 1;
+            ptr++;
         }
-      }
-    } 
-      
-    // CAS 3 : Mode LEAKS
-    // [MODIFICATION] On charge TOUT le graphe, pas juste l'usine de départ.
-    // Si on filtre ici, on ne connaitra pas les enfants des enfants.
-    else if (leaksActive) {
-      // Si col3 n'est pas "-", c'est un tuyau (connexion Parent -> Enfant)
-      if (strcmp(col3, "-") != 0) {
-        pUsine parent = trouverOuCreer(a, col2);
-        pUsine enfant = trouverOuCreer(a, col3);
-        
-        // On lit le pourcentage de fuite (colonne 5)
-        double fuite = (col5 && estNumerique(col5)) ? atof(col5) : 0.0;
-        
-        // On ajoute la connexion dans l'arbre
-        ajouterVoisin(parent, enfant, fuite);
-      }
-      
-      // Si c'est une ligne qui définit la capacité d'une usine (ex: Usine; - ; - ; Capacité ; -)
-      // C'est important pour récupérer le volume de départ de l'usine cible.
-      else if (strcmp(col2, "-") != 0 && strcmp(col4, "-") != 0) {
-         pUsine u = trouverOuCreer(a, col2);
-         u->capacite = atof(col4);
-      }
+
+        // Sécurité : on ignore les lignes trop courtes
+        if (i < 4) continue; 
+
+        char* col1 = cols[0];
+        char* col2 = cols[1];
+        char* col3 = cols[2];
+        char* col4 = cols[3];
+        char* col5 = (i == 5) ? cols[4] : "0";
+
+        // --- CORRECTION MAJEURE ICI ---
+        // On ne saute la ligne QUE si on est en mode Histo (car on a besoin des volumes)
+        // En mode Leaks, col4 peut être "-" pour les tuyaux, c'est normal.
+        if (histoActive && !estNumerique(col4)) continue;
+
+        double val = estNumerique(col4) ? atof(col4) : 0.0;
+        double fuite = (estNumerique(col5)) ? atof(col5) : 0.0;
+
+        // --- 1. MODE HISTOGRAMME (Inchangé) ---
+        if (histoActive) {
+            char* idUsine = NULL;
+            // Mode MAX
+            if (strcmp(mode, "max") == 0) {
+                // Logique Cas A (ID en col1) ou Cas B (ID en col2) pour la capacité
+                if (i>=3 && strcmp(col2, "-")==0 && strcmp(col1, "-")!=0 && estNumerique(col3)) { 
+                    // Cas spécial : ID; -; Capacité
+                     idUsine = col1; val = atof(col3); // attention décalage indices si format spécial
+                }
+                else if (strcmp(col3, "-") == 0 || strlen(col3) == 0) {
+                    if (strcmp(col2, "-") != 0) idUsine = col2;
+                }
+                
+                if (idUsine) {
+                    Usine u; memset(&u, 0, sizeof(Usine));
+                    strncpy(u.ID, idUsine, 49);
+                    u.capacite = val;
+                    int h=0; *a = insertionAVL(*a, u, &h);
+                }
+            }
+            // Mode SRC / REAL
+            else {
+                if (strcmp(col2, "-") != 0 && strcmp(col3, "-") != 0) {
+                    idUsine = col3;
+                    Usine u; memset(&u, 0, sizeof(Usine));
+                    strncpy(u.ID, idUsine, 49);
+                    if (strcmp(mode, "src") == 0) u.volumeSource = val;
+                    else if (strcmp(mode, "real") == 0) u.volumeTraite = val * (1.0 - (fuite/100.0));
+                    int h=0; *a = insertionAVL(*a, u, &h);
+                }
+            }
+        }
+
+        // --- 2. MODE LEAKS (Corrigé) ---
+        else if (leaksActive) {
+            // A. RECHERCHE DE LA CAPACITÉ INITIALE (Ligne de définition)
+            // On cherche l'ID exact soit en Col 1 (Cas spécial) soit en Col 2 (Standard)
+            int estDefCapacite = 0;
+            
+            // Cas spécial : Plant #ID;-;Capacité;-
+            if (strcmp(col1, mode) == 0 && strcmp(col2, "-") == 0 && estNumerique(col3)) {
+                pUsine u = trouverOuCreer(a, col1);
+                u->capacite = atof(col3);
+                capaciteTrouvee = 1;
+                estDefCapacite = 1;
+            }
+            // Cas Standard : -;Plant #ID;-;Capacité
+            else if (strcmp(col2, mode) == 0 && strcmp(col3, "-") == 0 && estNumerique(col4)) {
+                pUsine u = trouverOuCreer(a, col2);
+                u->capacite = val;
+                capaciteTrouvee = 1;
+                estDefCapacite = 1;
+            }
+
+            // B. CHARGEMENT DES TUYAUX
+            // Si ce n'est pas une ligne de capacité, c'est un tuyau.
+            // IMPORTANT : On charge TOUS les tuyaux valides (Col2->Col3) sans filtrer par ID usine ici.
+            // Pourquoi ? Car filtrer par col1 est risqué si le fichier est mal rempli.
+            // L'AVL va trier tout ça, et le parcours récursif ne suivra que les bons chemins.
+            if (!estDefCapacite && strcmp(col2, "-") != 0 && strcmp(col3, "-") != 0) {
+                 pUsine parent = trouverOuCreer(a, col2);
+                 pUsine enfant = trouverOuCreer(a, col3);
+                 ajouterVoisin(parent, enfant, fuite);
+            }
+        }
     }
     
-    // ====================================================
-    // INSERTION DANS L'AVL
-    // ====================================================
-    
-    if (lignePertinente == 1 && idUsine != NULL) {
-      // Initialisation de la structure usine à insérer
-      Usine u_temp;
-      memset(&u_temp, 0, sizeof(Usine));
-
-      // Remplissage de la structure
-      strncpy(u_temp.ID, idUsine, 49);
-      u_temp.ID[49] = '\0';
-      if (histoActive) {
-        if (strcmp(mode, "max") == 0) {
-          u_temp.capacite = capacite;
-        } else if (strcmp(mode, "src") == 0) {
-          u_temp.volumeSource = volume;
-        } else if (strcmp(mode, "real") == 0) {
-          u_temp.volumeTraite = volume;
-        } 
-      }
-
-      // Insertion dans l'AVL
-      int h = 0;
-      *a = insertionAVL(*a, u_temp, &h);
-    }
-  }
-  
-  fclose(fichier);
+    fclose(fichier);
 }
