@@ -1,18 +1,17 @@
+CSV_OUT_TRIE="temp_sorted.csv"
+CSV_OUT_MIN="min_50.csv"
+CSV_OUT_MAX="max_10.csv"
+if(CSV_OUT==max){
+tail -n +2 "$CSV_OUT" | sort -t';' -k2,2n > "$CSV_OUT_TRIE"
 
-FILE_TRIE="temp_sorted.csv"
-FILE_MIN="min_50.csv"
-FILE_MAX="max_10.csv"
-if(FILE==max){
-tail -n +2 "$FILE" | sort -t';' -k2,2n > "$FILE_TRIE"
+head -n 50 "$CSV_OUT_TRIE" > "$CSV_OUT_MIN"
 
-head -n 50 "$FILE_TRIE" > "$FILE_MIN"
-
-tail -n 10 "$FILE_TRIE" > "$FILE_MAX"
+tail -n 10 "$CSV_OUT_TRIE" > "$CSV_OUT_MAX"
 }
-if(FILE == src || FILE == real ){
-tail -n +2 "$FILE" | sort -t';' -k3,3n > "$FILE_TRIE"
+if(CSV_OUT == src || CSV_OUT == real ){
+tail -n +2 "$CSV_OUT" | sort -t';' -k3,3n > "$CSV_OUT_TRIE"
 
-head -n 50 "$FILE_TRIE" > "$FILE_MIN"
+head -n 50 "$CSV_OUT_TRIE" > "$CSV_OUT_MIN"
 
-tail -n 10 "$FILE_TRIE" > "$FILE_MAX"
+tail -n 10 "$CSV_OUT_TRIE" > "$CSV_OUT_MAX"
 }
