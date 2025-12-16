@@ -1,136 +1,82 @@
 #!/bin/bash
+# [Launch.sh]
 
-# Nom de l'exécutable (Doit correspondre au Makefile)
-EXEC="codeC/cwire" #
+EXEC="codeC/cwire"
 MAKEFILE="Makefile"
 
-# Fonction d'affichage de l'aide
 show_help() {
-    echo "Usage du script c-wire :"
-    echo "  $0 <fichier.csv> histo <max|src|real>"
-    echo "      -> Génère un histogramme des volumes."
-    echo "  $0 <fichier.csv> leaks <identifiant_usine>"
-    echo "      -> Affiche les fuites pour une usine spécifique."
-    echo "  $0 -h"
-    echo "      -> Affiche cette aide."
+    echo "Usage : $0 <fichier.csv> <histo|leaks> <args>"
     exit 0
 }
 
-# 0. Gestion de l'aide (-h)
-if [ "$1" == "-h" ]; then
+if [ "$1" == "-h" ] || [ "$#" -ne 3 ]; then
     show_help
-fi
-
-# 1. Vérification des arguments
-if [ "$#" -ne 3 ]; then
-    echo "Erreur : Nombre d'arguments incorrect (3 attendus)."
-    echo "Tapez '$0 -h' pour l'aide."
-    exit 1
 fi
 
 DATA_FILE="$1"
 COMMAND="$2"
 ARGUMENT="$3"
 
-# Vérification de l'existence du fichier de données
-if [ ! -f "$DATA_FILE" ]; then
-    echo "Erreur : Le fichier de données '$DATA_FILE' est introuvable."
-    exit 1
-fi
-
-# 2. Vérification et Compilation
-# On nettoie d'abord pour être sûr d'avoir une version propre (optionnel mais recommandé)
-if [ ! -f "$EXEC" ] && [ ! -f "$EXEC.exe" ]; then
-    echo "Compilation du programme C en cours..."
+# Compilation automatique si nécessaire
+if [ ! -f "$EXEC" ]; then
+    echo "Compilation..."
     make
-    if [ $? -ne 0 ]; then
-        echo "Erreur critique : La compilation a échoué."
-        exit 1
-    fi
+    if [ $? -ne 0 ]; then exit 1; fi
 fi
 
-# Début du chronométrage
-start_time=$(date +%s%N)
+# Nettoyage des anciens graphiques
+rm -f *.png
 
-# 3. Traitement selon la commande
+# Exécution du programme C
+echo "Exécution C..."
+start=$(date +%s%N)
+./$EXEC "$DATA_FILE" "$COMMAND" "$ARGUMENT"
+if [ $? -ne 0 ]; then exit 1; fi
+end=$(date +%s%N)
+duration=$(( (end - start) / 1000000 ))
+
+# --- LOGIQUE MIN / MAX pour HISTO ---
 if [ "$COMMAND" = "histo" ]; then
+    if [ "$ARGUMENT" == "src" ]; then CSV_OUT="vol_source.csv"; COL=2; fi
+    if [ "$ARGUMENT" == "max" ]; then CSV_OUT="vol_max.csv"; COL=2; fi
+    if [ "$ARGUMENT" == "real" ]; then CSV_OUT="vol_real.csv"; COL=2; fi
+    
+    # 1. Trier pour les 10 plus GRANDS (ordre décroissant 'r')
+    # On saute la 1ère ligne (header) avec tail, on trie, on prend les 10 premiers
+    echo "Génération du Top 10..."
+    cat "$CSV_OUT" | head -n 1 > "header.temp"
+    tail -n +2 "$CSV_OUT" | sort -t';' -k${COL}nr | head -n 10 > "data_max.temp"
+    cat "header.temp" "data_max.temp" > "temp_top10.csv"
 
-    # Vérification de la validité du mode
-    if [[ "$ARGUMENT" != "max" && "$ARGUMENT" != "src" && "$ARGUMENT" != "real" ]]; then
-        echo "Erreur : Mode '$ARGUMENT' invalide pour histo. (Choix : max, src, real)"
-        exit 1
-    fi
+    # 2. Trier pour les 50 plus PETITS (ordre croissant)
+    echo "Génération du Top 50 min..."
+    tail -n +2 "$CSV_OUT" | sort -t';' -k${COL}n | head -n 50 > "data_min.temp"
+    cat "header.temp" "data_min.temp" > "temp_min50.csv"
 
-    echo "Traitement 'histo' en mode '$ARGUMENT'..."
-
-    # Exécution du programme C
-    # Note : Sur Git Bash, ./cwire fonctionne même si le fichier est cwire.exe
-    ./$EXEC "$DATA_FILE" "$COMMAND" "$ARGUMENT"
-    RET=$?
-
-    if [ $RET -ne 0 ]; then
-        echo "Erreur lors de l'exécution du programme C (Code $RET)."
-        exit $RET
-    fi
-
-    # Détermination du nom du fichier de sortie généré par le C
-    if [ "$ARGUMENT" == "src" ]; then CSV_OUT="vol_source.csv"; fi
-    if [ "$ARGUMENT" == "max" ]; then CSV_OUT="vol_max.csv"; fi
-    if [ "$ARGUMENT" == "real" ]; then CSV_OUT="vol_real.csv"; fi
-
-    # Génération du graphique Gnuplot
-    if [ -f "$CSV_OUT" ]; then
-        echo "Génération du graphique pour $CSV_OUT..."
-        
-        # Configuration Gnuplot :
-        # - separator ';' : car vos CSV sont séparés par des points-virgules
-        # - skip 1 : pour ignorer la ligne d'en-tête (identifier;volume...)
-        # - xtic(1) : utilise la colonne 1 (ID usine) comme étiquette X
-        # - style data histogram : pour faire des barres
-        # - yrange [0:*] : pour que l'axe Y commence à 0
-        
+    # 3. Gnuplot : Fonction pour générer un graph
+    generate_graph() {
+        INPUT=$1
+        OUTPUT=$2
+        TITLE=$3
         gnuplot -e "
-            set terminal png size 1200,800 enhanced font 'Arial,10';
-            set output '${ARGUMENT}.png';
+            set terminal png size 1000,600 enhanced font 'Arial,10';
+            set output '$OUTPUT';
             set datafile separator ';';
-            set title 'Histogramme : $ARGUMENT';
-            set xlabel 'Usines';
-            set ylabel 'Volume (M.m3)';
+            set title '$TITLE';
             set style data histograms;
             set style fill solid 1.0 border -1;
-            set boxwidth 0.9;
+            set boxwidth 0.7;
             set xtics rotate by -45 scale 0;
-            set grid y;
-            set yrange [0:*];
-            plot '$CSV_OUT' using 2:xtic(1) notitle linecolor rgb '#3366CC';
+            set ylabel 'Volume (M.m3)';
+            plot '$INPUT' using ${COL}:xtic(1) title 'Volume' linecolor rgb '#4caf50';
         "
-        echo "Graphique généré avec succès : ${ARGUMENT}.png"
-    else
-        echo "Erreur : Le fichier $CSV_OUT n'a pas été généré par le programme C."
-    fi
+    }
 
-elif [ "$COMMAND" = "leaks" ]; then
-    echo "Traitement 'leaks' pour l'usine : $ARGUMENT..."
-    
-    # Appel du programme C (commande leaks à implémenter plus tard dans le C)
-    ./$EXEC "$DATA_FILE" "$COMMAND" "$ARGUMENT"
-    RET=$?
-    
-    if [ $RET -ne 0 ]; then
-        echo "Erreur ou alerte lors du calcul des fuites (Code $RET)."
-    else
-        echo "Calcul des fuites terminé."
-    fi
+    generate_graph "temp_top10.csv" "${ARGUMENT}_max.png" "Top 10 : $ARGUMENT"
+    generate_graph "temp_min50.csv" "${ARGUMENT}_min.png" "Top 50 Min : $ARGUMENT"
 
-else
-    echo "Erreur : Commande '$COMMAND' inconnue."
-    show_help
+    # Nettoyage temp
+    rm *.temp
 fi
 
-# 4. Affichage du temps d'exécution
-end_time=$(date +%s%N)
-# Calcul de la durée en secondes (avec virgule flottante pour précision)
-# Astuce pour Git Bash/Linux : on utilise bc ou awk, ou une simple soustraction bash
-duration=$(( (end_time - start_time) / 1000000 )) ; # en millisecondes
-
-echo "Durée totale : ${duration} ms"
+echo "Terminé en ${duration} ms."

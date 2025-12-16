@@ -46,8 +46,6 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
     exit(1);
   }
 
-  printf("Le fichier a ete ouvert sans erreur\n");
-  
   char ligne[BUFFER_SIZE];
   char ligne_copie[BUFFER_SIZE];
   
@@ -59,44 +57,29 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
     if (strlen(ligne) == 0) continue;
     strcpy(ligne_copie, ligne);
 
+    // Découpage sécurisé
     char* col1 = strtok(ligne_copie, ";");
     char* col2 = strtok(NULL, ";");
     char* col3 = strtok(NULL, ";");
     char* col4 = strtok(NULL, ";");
     char* col5 = strtok(NULL, ";");
 
-    // On vérifie si la ligne est valide
-    if (col1 == NULL || col2 == NULL || col3 == NULL || col4 == NULL) continue;
-    if (!estNumerique(col4)) continue;
+    // Vérification minimale : on a besoin au moins des identifiants
+    if (col2 == NULL || col3 == NULL || col4 == NULL) continue;
 
-    // On initialise les variables pour stocker les données de la ligne 
-    char* idUsine = NULL;
-    double capacite = 0;
-    double volume = 0;
-    int lignePertinente = 0;
-    
-    // ====================================================
-    // LOGIQUE DE SELECTION DES LIGNES SELON LE MODE
-    // La fonction atof convertit une chaîne de caractère en double.
-    // La fonction memset initialise les valeurs à 0.
-    // ====================================================
-
+    // --- MODE HISTOGRAMME ---
     if (histoActive) {
-        
-        // 1. Détection d'une ligne de CAPACITÉ
-        // Format attendu : - ; ID_USINE ; - ; CAPACITE ; -
-        // L'usine est bien dans la 2ème colonne (col2)
+        // Pour l'histo, on a besoin que col4 soit un nombre (Capacité ou Volume)
+        if (!estNumerique(col4)) continue;
+
+        // 1. Capacité (Usine seule)
         if (strcmp(col3, "-") == 0 && strcmp(col2, "-") != 0) {
-            pUsine u = trouverOuCreer(a, col2); // On utilise col2
+            pUsine u = trouverOuCreer(a, col2);
             u->capacite = atof(col4);
         }
-        
-        // 2. Détection d'une ligne de TRAJET (Flux)
-        // Format attendu : - ; SOURCE ; DESTINATION ; VOLUME ; FUITE
+        // 2. Trajet (Source -> Usine)
         else if (strcmp(col3, "-") != 0 && strcmp(col2, "-") != 0) {
-            // En mode SRC ou REAL, on s'intéresse au trajet
             if (strcmp(mode, "src") == 0 || strcmp(mode, "real") == 0) {
-                // Ici, l'usine qui REÇOIT l'eau est en 3ème colonne (col3)
                 pUsine u = trouverOuCreer(a, col3); 
                 double volumeBrut = atof(col4);
                 
@@ -112,25 +95,17 @@ void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
             }
         }
     }
-    // CAS 3 : Mode LEAKS
-    // [MODIFICATION] On charge TOUT le graphe, pas juste l'usine de départ.
-    // Si on filtre ici, on ne connaitra pas les enfants des enfants.
+    // --- MODE LEAKS ---
     else if (leaksActive) {
-      // Si col3 n'est pas "-", c'est un tuyau (connexion Parent -> Enfant)
+      // 1. Tuyau (Connexion) : Ici col4 peut être "-" donc on ne le vérifie pas
       if (strcmp(col3, "-") != 0) {
         pUsine parent = trouverOuCreer(a, col2);
         pUsine enfant = trouverOuCreer(a, col3);
-        
-        // On lit le pourcentage de fuite (colonne 5)
         double fuite = (col5 && estNumerique(col5)) ? atof(col5) : 0.0;
-        
-        // On ajoute la connexion dans l'arbre
         ajouterVoisin(parent, enfant, fuite);
       }
-      
-      // Si c'est une ligne qui définit la capacité d'une usine (ex: Usine; - ; - ; Capacité ; -)
-      // C'est important pour récupérer le volume de départ de l'usine cible.
-      else if (strcmp(col2, "-") != 0 && strcmp(col4, "-") != 0) {
+      // 2. Capacité de l'usine (pour le volume de départ)
+      else if (strcmp(col2, "-") != 0 && estNumerique(col4)) {
          pUsine u = trouverOuCreer(a, col2);
          u->capacite = atof(col4);
       }
