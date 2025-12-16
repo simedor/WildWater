@@ -10,13 +10,13 @@ void afficherNoeud(Usine* u, FILE* fichier, char* mode) {
     double valeur = 0;
     double valeur2 = 0;
     if (strcmp(mode, "src") == 0) {
-        valeur = u->volumeSource;
-        valeur2 = u->capacite;
+        valeur2 = u->volumeSource;
+        valeur = u->capacite;
     } else if (strcmp(mode, "max") == 0) {
         valeur = u->capacite;
     } else if (strcmp(mode, "real") == 0) {
-        valeur = u->volumeTraite;
-        valeur2 = u->capacite;
+        valeur2 = u->volumeTraite;
+        valeur = u->capacite;
     } else {
         //msg d'erreur au cas où
         fprintf(stderr, ROUGE "Erreur interne: Mode '%s' non reconnu par afficherNoeud.\n" RESET, mode);
