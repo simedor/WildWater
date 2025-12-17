@@ -1,4 +1,5 @@
 #include "header.h"
+#include "couleurs.h"
 #include <ctype.h>
 #define BUFFER_SIZE 4096
 
@@ -18,7 +19,6 @@ Vérifier si une chaîne est un nombre valide
 int estNumerique(char* chaine) {
   if (chaine == NULL || strlen(chaine) == 0) return 0;
   if (strcmp(chaine, "-") == 0) return 0;
-  // On vérifie le premier caractère (chiffre ou signe négatif)
   return (isdigit(chaine[0]) || chaine[0] == '-');
 }
 
@@ -42,7 +42,7 @@ Charger les données pour faire l'histogramme des sources.
 void chargerDonnees(char* cheminFichier, pAVL* a, char* commande, char* mode) {
   FILE* fichier = fopen(cheminFichier, "r");
   if (fichier == NULL) {
-    fprintf(stderr, "Erreur : Impossible d'ouvrir le fichier %s\n", cheminFichier);
+    fprintf(stderr, ROUGE "Erreur : Impossible d'ouvrir le fichier %s\n" RESET, cheminFichier);
     exit(1);
   }
 
