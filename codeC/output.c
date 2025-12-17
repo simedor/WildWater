@@ -1,5 +1,5 @@
 #include "header.h"
-#include "couleurs.h" // Ajout de l'inclusion des couleurs
+#include "couleurs.h"
 
 /*
 Écrit les données d'une usine dans le fichier selon le mode choisis (src, max, real).
@@ -101,7 +101,7 @@ Générer le fichier CSV pour leaks
 void outputLeaks(char* nomFichier, pAVL a, char* ID) {
     FILE* fichier = fopen(nomFichier, "w");
     if (fichier == NULL) {
-        perror("Erreur création fichier leaks");
+        perror(ROUGE "Erreur création fichier leaks" RESET);
         exit(1);
     }
 
@@ -111,7 +111,7 @@ void outputLeaks(char* nomFichier, pAVL a, char* ID) {
 
     if (depart == NULL) {
         fprintf(fichier, "%s;-1\n", ID); 
-        printf("Usine '%s' introuvable.\n", ID);
+        printf(ROUGE "Usine '%s' introuvable.\n" RESET, ID);
     } else {
         // MODIFICATION ICI :
         // On prend le volume REEL (volumeTraite) s'il existe, qui est INFERIEUR OU EGAL au max théorique (c'est cohérent car on a comme dit ds le whatsapp des valeurs un peu trop élevées)

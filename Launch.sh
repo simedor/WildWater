@@ -5,7 +5,9 @@ EXEC="codeC/cwire"
 MAKEFILE="Makefile"
 
 show_help() {
-    echo "Usage : $0 <fichier.csv> <histo|leaks> <args>"
+    echo "Usage du programme : $0 <fichier.csv> <histo|leaks> <args>"
+    echo "Utilisation pour 'histo' : src | max | real"
+    echo "Utilisation pour 'leaks' : <ID_usine>"
     exit 0
 }
 
