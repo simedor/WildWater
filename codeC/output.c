@@ -18,7 +18,6 @@ void afficherNoeud(Usine* u, FILE* fichier, char* mode) {
         valeur2 = u->volumeTraite;
         valeur = u->capacite;
     } else {
-        //msg d'erreur au cas où
         fprintf(stderr, ROUGE "Erreur interne: Mode '%s' non reconnu par afficherNoeud.\n" RESET, mode);
         return; 
     }
@@ -106,7 +105,6 @@ void outputLeaks(char* nomFichier, pAVL a, char* ID) {
         exit(1);
     }
 
-    // Ecriture de l'en-tête
     fprintf(fichier, "identifier;Leak volume(M.m3.year-1)\n");
 
     pUsine depart = rechercher(a, ID);

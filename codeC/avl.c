@@ -1,3 +1,5 @@
+//Fichier contenant les fonctions de gestion de l'arbre AVL
+
 #include "header.h"
 
 int max(int a, int b) { return a > b ? a : b; }
@@ -91,9 +93,7 @@ pAVL insertionAVL(pAVL a, Usine u, int* h) {
 	} else {
 		a->u->volumeSource += u.volumeSource;
 		a->u->volumeTraite += u.volumeTraite;
-		if (u.capacite > 0) {
-        	a->u->capacite = u.capacite;
-    	}
+		if (u.capacite > 0) a->u->capacite = u.capacite;
 		*h = 0;
 		return a;
 	}
@@ -142,9 +142,7 @@ void ajouterVoisin(pUsine parent, pUsine enfant, double fuite) {
     // Vérification anti-doublon (ROBUSTESSE)
     pTuyau temp = parent->listeEnfants;
     while (temp != NULL) {
-        if (temp->noeud == enfant) {
-            return; // Le lien existe déjà, on ne fait rien !
-        }
+        if (temp->noeud == enfant) return; // Le lien existe déjà, on ne fait rien !
         temp = temp->pSuivant;
     }
 

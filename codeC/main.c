@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   // 2. VERIFICATION DE LA COMMANDE ET PREPARATION DU FICHIER DE SORTIE
   
   char nomFichierSortie[256];
-  int commandeEntree = 0; // 0 = histo, 1 = leaeks
+  int commandeEntree = 0; // 0 = histo, 1 = leaks
 
   if (strcmp(commande, "histo") == 0) {
     commandeEntree = 0;
