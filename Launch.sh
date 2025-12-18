@@ -45,9 +45,9 @@ duration=$(( (end - start) / 1000000 ))
 
 # --- LOGIQUE MIN / MAX pour HISTO ---
 if [ "$COMMAND" = "histo" ]; then
-    if [ "$ARGUMENT" == "src" ]; then CSV_OUT="vol_source.csv"; COL=2; fi
-    if [ "$ARGUMENT" == "max" ]; then CSV_OUT="vol_max.csv"; COL=3; fi
-    if [ "$ARGUMENT" == "real" ]; then CSV_OUT="vol_real.csv"; COL=3; fi
+    if [ "$ARGUMENT" == "src" ]; then CSV_OUT="vol_source.csv"; COL=2; COL2=2; fi
+    if [ "$ARGUMENT" == "max" ]; then CSV_OUT="vol_max.csv"; COL=3; COL2=2; fi
+    if [ "$ARGUMENT" == "real" ]; then CSV_OUT="vol_real.csv"; COL=3; COL2=2; fi
     
     # 1. Trier pour les 10 plus GRANDS (ordre décroissant 'r')
     # On saute la 1ère ligne (header) avec tail, on trie, on prend les 10 premiers
@@ -76,7 +76,7 @@ if [ "$COMMAND" = "histo" ]; then
             set boxwidth 0.7;
             set xtics rotate by -45 scale 0;
             set ylabel 'Volume (M.m3)';
-            plot '$INPUT' using ${COL}:xtic(1) title 'Volume' linecolor rgb '#4caf50';
+            plot '$INPUT' using ${COL2}:xtic(1) title 'Volume' linecolor rgb '#4caf50';
         "
     }
 
