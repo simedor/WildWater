@@ -45,8 +45,8 @@ duration=$(( (end - start) / 1000000 ))
 
 # --- LOGIQUE MIN / MAX pour HISTO ---
 if [ "$COMMAND" = "histo" ]; then
-    if [ "$ARGUMENT" == "src" ]; then CSV_OUT="vol_source.csv"; COL=2; COL2=2; fi
-    if [ "$ARGUMENT" == "max" ]; then CSV_OUT="vol_max.csv"; COL=3; COL2=2; fi
+    if [ "$ARGUMENT" == "src" ]; then CSV_OUT="vol_source.csv"; COL=3; COL2=2; fi
+    if [ "$ARGUMENT" == "max" ]; then CSV_OUT="vol_max.csv"; COL=2; COL2=2; fi
     if [ "$ARGUMENT" == "real" ]; then CSV_OUT="vol_real.csv"; COL=3; COL2=2; fi
     
     # 1. Trier pour les 10 plus GRANDS (ordre décroissant 'r')
