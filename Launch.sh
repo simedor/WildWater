@@ -16,7 +16,7 @@ show_help() {
 if [ "$1" == "-h" ]; then
     show_help
 fi
-if[ "$#" -ne 3 ]; then
+if [ "$#" -ne 3 ]; then
     show_erreur
     show_help
 fi
