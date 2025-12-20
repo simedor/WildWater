@@ -1,7 +1,7 @@
 # Projet WildWater
 
 ## Compilation : 
-### linux : <br />
+### Linux : <br />
 - make clean <br />
 - make <br />
 - ./Shell.sh [nom du fichier que vous voulez analyser] [commandes histo ou leaks] <br />
