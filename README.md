@@ -23,12 +23,16 @@ synthèse de données d’un système de distribution d’eau
 - `gnuplot` pour la génération des graphiques.
 
 ### Commandes de build
-Pour compiler le projet et générer l'exécutable, placez-vous à la racine du projet et exécutez :
+
+Mettez le fichier .dat/.csv que vous souhaitez analyser à la racine.
+
+Pour compiler le projet et générer l'exécutable, placez-vous à la racine du projet cloné et exécutez :
 - ```bash
   make clean && make
   chmod +x Launch.sh
 
 ### Utilisation
+
 
 #### **Pour générer les histogrammes des usines :**
 - pour les valeurs maximales :
