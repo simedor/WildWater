@@ -1,6 +1,6 @@
 # Projet WildWater
 
-**Auteurs :** <br />
+## **Auteurs :** <br />
 
 **GODINEAU Alexandre**  (https://github.com/Alegodix) <br /> 
 **Siméon Dorninger** (https://github.com/simedor) <br /> 
