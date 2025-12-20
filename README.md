@@ -24,18 +24,26 @@ synthèse de données d’un système de distribution d’eau
 
 ### Commandes de build
 Pour compiler le projet et générer l'exécutable, placez-vous à la racine du projet et exécutez :
-- make clean && make
-- chmod +x Launch.sh
+- ```bash
+  make clean && make
+  chmod +x Launch.sh
 
 ### Utilisation
 
 #### **Pour générer les histogrammes des usines :**
-- pour les valeurs maximales : ```bash ./Launch.sh <fichier .csv> histo max
-- pour les valeurs sources : ```bash ./Launch.sh <fichier .csv> histo src
-- pour les valeurs réelles : ```bash ./Launch.sh <fichier .csv> histo real
+- pour les valeurs maximales :
+- ```bash
+  ./Launch.sh <fichier .csv> histo max
+- pour les valeurs sources :
+- ```bash
+  ./Launch.sh <fichier .csv> histo src
+- pour les valeurs réelles :
+- ```bash
+  ./Launch.sh <fichier .csv> histo real
 
 #### **Pour avoir les fuites (leaks) :**
-- ./Launch.sh <fichier .csv> leaks "<nom de l'usine précis>"
+- ```bash
+  ./Launch.sh <fichier .csv> leaks "<nom de l'usine précis>"
 
 ## Structure du dépôt GitHub:
 
