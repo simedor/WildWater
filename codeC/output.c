@@ -2,7 +2,7 @@
 #include "couleurs.h"
 
 /*
-Écrit les données d'une usine dans le fichier selon le mode choisis (src, max, real).
+Écrire les données d'une usine dans le fichier selon le mode choisis (src, max, real).
 Utilisée par outputHisto.
 */
 void afficherNoeud(Usine* u, FILE* fichier, char* mode) {
@@ -29,7 +29,7 @@ void afficherNoeud(Usine* u, FILE* fichier, char* mode) {
 }
 
 /*
-Ecrit les données dans l'ordre alphabétique inverse des identifiants.
+Ecrire les données dans l'ordre alphabétique inverse des identifiants
 */
 void parcoursInfixeInverse(pAVL a, FILE* fichier, char* mode) {
   if (a != NULL) {
@@ -38,7 +38,9 @@ void parcoursInfixeInverse(pAVL a, FILE* fichier, char* mode) {
     parcoursInfixeInverse(a->fg, fichier, mode);
   }
 }
-/* Générer le fichier CSV pour faire l'histogramme
+
+/* 
+Générer le fichier CSV pour faire l'histogramme
 */
 void outputHisto(char* nomFichier, pAVL a, char* mode) {
     FILE* fichier = fopen(nomFichier, "w");
@@ -79,16 +81,9 @@ double sommePertes(pUsine u, double eauArrivante) {
     // Parcours de la liste chaînée des voisins (les tuyaux partants)
     pTuyau t = u->listeEnfants;
     while (t != NULL) {
-        // 1. Calcul de la fuite sur CE tronçon
-        // (pourcentageFuite est stocké tel quel, ex: 2.5 pour 2.5%)
         double perteTuyau = eauParEnfant * (t->pourcentageFuite / 100.0);
-        
-        // 2. Calcul de l'eau restante qui arrive au noeud suivant
         double eauRestante = eauParEnfant - perteTuyau;
-        
-        // 3. Appel récursif : On ajoute la perte de ce tuyau + les pertes générées en aval
         totalPertes = totalPertes + perteTuyau + sommePertes(t->noeud, eauRestante);
-        
         t = t->pSuivant;
     }
     
@@ -113,8 +108,7 @@ void outputLeaks(char* nomFichier, pAVL a, char* ID) {
         fprintf(fichier, "%s;-1\n", ID); 
         printf(ROUGE "Usine '%s' introuvable.\n" RESET, ID);
     } else {
-        // MODIFICATION ICI :
-        // On prend le volume REEL (volumeTraite) s'il existe, qui est INFERIEUR OU EGAL au max théorique (c'est cohérent car on a comme dit ds le whatsapp des valeurs un peu trop élevées)
+        // On prend le volumeTraite s'il existe, qui est inférieur ou égal au max théorique
         // Sinon, on se rabat sur la capacité (par sécurité).
         double volumeInitial = depart->volumeTraite;
         if (volumeInitial == 0) volumeInitial = depart->capacite;
