@@ -6,7 +6,7 @@
 - make <br />
 - ./Shell.sh [nom du fichier que vous voulez analyser] [commandes histo ou leaks] <br />
 
-**Auteurs :** <br />
+### **Auteurs :** <br />
 
 **GODINEAU Alexandre**  (https://github.com/Alegodix) <br /> 
 **Siméon Dorninger** (https://github.com/simedor) <br /> 
