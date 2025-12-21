@@ -10,8 +10,8 @@
 
 ## Description
 
-Ce projet est un programme un programme permettant de faire la
-synthèse de données d’un système de distribution d’eau
+Ce projet est un programme permettant de faire la
+synthèse de données d’un système de distribution d’eau.
 
 ---
 
@@ -22,7 +22,7 @@ synthèse de données d’un système de distribution d’eau
 - `gcc` et `make` pour la compilation.
 - `gnuplot` pour la génération des graphiques.
 
-### Commandes de build
+### Installation : 
 
 Mettez le fichier .dat/.csv que vous souhaitez analyser à la racine du projet.
 
